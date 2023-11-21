@@ -1,17 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.InputSystem.EnhancedTouch;
+
 
 public class SelectPart : MonoBehaviour
 {
     [SerializeField]
-    private Camera camera;
+    private Camera mainCamera;
     private RenderOutline outlineScript;
     public InputManager inputManager;
 
@@ -19,32 +13,26 @@ public class SelectPart : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        camera = Camera.main;
-        outlineScript = camera.GetComponent<RenderOutline>();
+        mainCamera = Camera.main;
+        outlineScript = mainCamera.GetComponent<RenderOutline>();
     }
 
     private void OnEnable()
     {
         inputManager.OnStartTouch += DetectTouchPart;
-        inputManager.OnPeformHold += DetectHoldPart;
+        inputManager.OnPerformHold += DetectHoldPart;
     }
 
     private void OnDisable()
     {
         inputManager.OnEndTouch -= DetectTouchPart;
-        inputManager.OnPeformHold -= DetectHoldPart;
+        inputManager.OnPerformHold -= DetectHoldPart;
     }
-
-    void Start()
-    {
-        
-    }
-        
 
     public void DetectTouchPart(Vector2 screenPosition, float time)
     {
-        Vector3 screenCoordinates = new Vector3(screenPosition.x, screenPosition.y, camera.nearClipPlane);
-        var ray = camera.ScreenPointToRay(screenCoordinates);
+        Vector3 screenCoordinates = new Vector3(screenPosition.x, screenPosition.y, mainCamera.nearClipPlane);
+        var ray = mainCamera.ScreenPointToRay(screenCoordinates);
         bool hitSelectable = Physics.Raycast(ray, out var hit) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Selectable");
         if (hitSelectable)
         {
@@ -58,8 +46,8 @@ public class SelectPart : MonoBehaviour
 
     public void DetectHoldPart(Vector2 screenPosition, float time)
     {
-        Vector3 screenCoordinates = new Vector3(screenPosition.x, screenPosition.y, camera.nearClipPlane);
-        var ray = camera.ScreenPointToRay(screenCoordinates);
+        Vector3 screenCoordinates = new Vector3(screenPosition.x, screenPosition.y, mainCamera.nearClipPlane);
+        var ray = mainCamera.ScreenPointToRay(screenCoordinates);
         bool hitSelectable = Physics.Raycast(ray, out var hit) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Selectable");
         if (hitSelectable)
         {
@@ -131,7 +119,6 @@ public class SelectPart : MonoBehaviour
                         {
                             if(outlineScript.RenderObject.Count != 0)
                             {
-                                Debug.Log("yes");
                                 outlineScript.RenderObject[0] = hitData.transform.GetComponent<Renderer>();
 
                             }
@@ -183,9 +170,4 @@ public class SelectPart : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
