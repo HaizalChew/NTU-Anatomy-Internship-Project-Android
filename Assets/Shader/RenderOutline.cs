@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class RenderOutline : MonoBehaviour
 {
-    public Renderer[] RenderObject;
+    public List<Renderer> RenderObject = new List<Renderer>();
+
 
     public Material WriteObject;
 
