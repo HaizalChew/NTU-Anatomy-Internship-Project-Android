@@ -10,6 +10,7 @@ using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch;
 
 public class InputManager : MonoBehaviour
 {
+    // Start is called before the first frame update
     public delegate void StartTouchEvent(Vector2 position, float time);
     public event StartTouchEvent OnStartTouch;
     public delegate void EndTouchEvent(Vector2 position, float time);
@@ -105,10 +106,6 @@ public class InputManager : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-=======
     // Update is called once per frame
     void Update()
     {
@@ -135,6 +132,4 @@ public class InputManager : MonoBehaviour
             }
         }
     }
->>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
->>>>>>> Stashed changes
 }

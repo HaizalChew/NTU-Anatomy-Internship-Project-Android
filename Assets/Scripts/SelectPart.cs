@@ -58,8 +58,8 @@ public class SelectPart : MonoBehaviour
 
     public void DetectHoldPart(Vector2 screenPosition, float time)
     {
-        Vector3 screenCoordinates = new Vector3(screenPosition.x, screenPosition.y, camera.nearClipPlane);
-        var ray = camera.ScreenPointToRay(screenCoordinates);
+        Vector3 screenCoordinates = new Vector3(screenPosition.x, screenPosition.y, GetComponent<Camera>().nearClipPlane);
+        var ray = GetComponent<Camera>().ScreenPointToRay(screenCoordinates);
         bool hitSelectable = Physics.Raycast(ray, out var hit) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Selectable");
         if (hitSelectable)
         {
