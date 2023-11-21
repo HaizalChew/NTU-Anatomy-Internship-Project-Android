@@ -10,10 +10,6 @@ public class RenderOutline : MonoBehaviour
     public Material WriteObject;
 
     public Material SelectOutline;
-    void Update()
-    {
-
-    }
 
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -32,11 +28,11 @@ public class RenderOutline : MonoBehaviour
                 commands.DrawRenderer(renderObj, WriteObject);
             }
         }
-        //apply everything and clean up in commandbuffer
+        //apply everything and clean up in command buffer
         commands.Blit(source, destination, SelectOutline);
         commands.ReleaseTemporaryRT(selectionBuffer);
 
-        //execute and clean up commandbuffer itself
+        //execute and clean up command buffer itself
         Graphics.ExecuteCommandBuffer(commands);
         commands.Dispose();
         Graphics.SetRenderTarget(destination);
