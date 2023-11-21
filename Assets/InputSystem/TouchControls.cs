@@ -46,6 +46,15 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""TouchDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""ae238a44-32a8-4898-a1a7-e1ca304627db"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""TouchPosition"",
                     ""type"": ""Value"",
                     ""id"": ""b5c51833-a00b-46cc-a09c-0800d25bf61c"",
@@ -53,6 +62,40 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+                    ""name"": ""SecondTouchPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""9c71d4c8-8013-4c62-8c9d-947331bd75b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondTouchPosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""a9376b81-ea44-4903-9d20-21aa80456989"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+<<<<<<< Updated upstream
+=======
+=======
+                    ""name"": ""TouchHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""02c53c51-f96e-46e2-a902-ab3d61d6f14f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Tap"",
+                    ""initialStateCheck"": false
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
                 }
             ],
             ""bindings"": [
@@ -70,8 +113,8 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2b734594-190b-4b9b-a33b-b8263455cd54"",
-                    ""path"": ""<Touchscreen>/primaryTouch/press"",
-                    ""interactions"": ""Press(behavior=2)"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": ""Press,Hold"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""TouchPress"",
@@ -88,6 +131,54 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
                     ""action"": ""TouchPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+                    ""id"": ""5b829713-9c18-4c9c-a856-3f8b42331e38"",
+                    ""path"": ""<Touchscreen>/touch1/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondTouchPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b625df25-bb61-4832-bc39-fa555436041c"",
+                    ""path"": ""<Touchscreen>/touch1/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondTouchPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fea311c2-9874-4df8-b011-442f52f30068"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchDelta"",
+<<<<<<< Updated upstream
+=======
+=======
+                    ""id"": ""94b3b67b-636d-4e0f-9a46-583e6a64ceaf"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchHold"",
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -98,7 +189,19 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
         m_Touch = asset.FindActionMap("Touch", throwIfNotFound: true);
         m_Touch_TouchInput = m_Touch.FindAction("TouchInput", throwIfNotFound: true);
         m_Touch_TouchPress = m_Touch.FindAction("TouchPress", throwIfNotFound: true);
+        m_Touch_TouchDelta = m_Touch.FindAction("TouchDelta", throwIfNotFound: true);
         m_Touch_TouchPosition = m_Touch.FindAction("TouchPosition", throwIfNotFound: true);
+<<<<<<< Updated upstream
+        m_Touch_SecondTouchPress = m_Touch.FindAction("SecondTouchPress", throwIfNotFound: true);
+        m_Touch_SecondTouchPosition = m_Touch.FindAction("SecondTouchPosition", throwIfNotFound: true);
+=======
+<<<<<<< HEAD
+        m_Touch_SecondTouchPress = m_Touch.FindAction("SecondTouchPress", throwIfNotFound: true);
+        m_Touch_SecondTouchPosition = m_Touch.FindAction("SecondTouchPosition", throwIfNotFound: true);
+=======
+        m_Touch_TouchHold = m_Touch.FindAction("TouchHold", throwIfNotFound: true);
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
     }
 
     public void Dispose()
@@ -162,14 +265,38 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
     private List<ITouchActions> m_TouchActionsCallbackInterfaces = new List<ITouchActions>();
     private readonly InputAction m_Touch_TouchInput;
     private readonly InputAction m_Touch_TouchPress;
+    private readonly InputAction m_Touch_TouchDelta;
     private readonly InputAction m_Touch_TouchPosition;
+<<<<<<< Updated upstream
+    private readonly InputAction m_Touch_SecondTouchPress;
+    private readonly InputAction m_Touch_SecondTouchPosition;
+=======
+<<<<<<< HEAD
+    private readonly InputAction m_Touch_SecondTouchPress;
+    private readonly InputAction m_Touch_SecondTouchPosition;
+=======
+    private readonly InputAction m_Touch_TouchHold;
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
     public struct TouchActions
     {
         private @TouchControls m_Wrapper;
         public TouchActions(@TouchControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @TouchInput => m_Wrapper.m_Touch_TouchInput;
         public InputAction @TouchPress => m_Wrapper.m_Touch_TouchPress;
+        public InputAction @TouchDelta => m_Wrapper.m_Touch_TouchDelta;
         public InputAction @TouchPosition => m_Wrapper.m_Touch_TouchPosition;
+<<<<<<< Updated upstream
+        public InputAction @SecondTouchPress => m_Wrapper.m_Touch_SecondTouchPress;
+        public InputAction @SecondTouchPosition => m_Wrapper.m_Touch_SecondTouchPosition;
+=======
+<<<<<<< HEAD
+        public InputAction @SecondTouchPress => m_Wrapper.m_Touch_SecondTouchPress;
+        public InputAction @SecondTouchPosition => m_Wrapper.m_Touch_SecondTouchPosition;
+=======
+        public InputAction @TouchHold => m_Wrapper.m_Touch_TouchHold;
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
         public InputActionMap Get() { return m_Wrapper.m_Touch; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -185,9 +312,30 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
             @TouchPress.started += instance.OnTouchPress;
             @TouchPress.performed += instance.OnTouchPress;
             @TouchPress.canceled += instance.OnTouchPress;
+            @TouchDelta.started += instance.OnTouchDelta;
+            @TouchDelta.performed += instance.OnTouchDelta;
+            @TouchDelta.canceled += instance.OnTouchDelta;
             @TouchPosition.started += instance.OnTouchPosition;
             @TouchPosition.performed += instance.OnTouchPosition;
             @TouchPosition.canceled += instance.OnTouchPosition;
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+            @SecondTouchPress.started += instance.OnSecondTouchPress;
+            @SecondTouchPress.performed += instance.OnSecondTouchPress;
+            @SecondTouchPress.canceled += instance.OnSecondTouchPress;
+            @SecondTouchPosition.started += instance.OnSecondTouchPosition;
+            @SecondTouchPosition.performed += instance.OnSecondTouchPosition;
+            @SecondTouchPosition.canceled += instance.OnSecondTouchPosition;
+<<<<<<< Updated upstream
+=======
+=======
+            @TouchHold.started += instance.OnTouchHold;
+            @TouchHold.performed += instance.OnTouchHold;
+            @TouchHold.canceled += instance.OnTouchHold;
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
         }
 
         private void UnregisterCallbacks(ITouchActions instance)
@@ -198,9 +346,30 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
             @TouchPress.started -= instance.OnTouchPress;
             @TouchPress.performed -= instance.OnTouchPress;
             @TouchPress.canceled -= instance.OnTouchPress;
+            @TouchDelta.started -= instance.OnTouchDelta;
+            @TouchDelta.performed -= instance.OnTouchDelta;
+            @TouchDelta.canceled -= instance.OnTouchDelta;
             @TouchPosition.started -= instance.OnTouchPosition;
             @TouchPosition.performed -= instance.OnTouchPosition;
             @TouchPosition.canceled -= instance.OnTouchPosition;
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+            @SecondTouchPress.started -= instance.OnSecondTouchPress;
+            @SecondTouchPress.performed -= instance.OnSecondTouchPress;
+            @SecondTouchPress.canceled -= instance.OnSecondTouchPress;
+            @SecondTouchPosition.started -= instance.OnSecondTouchPosition;
+            @SecondTouchPosition.performed -= instance.OnSecondTouchPosition;
+            @SecondTouchPosition.canceled -= instance.OnSecondTouchPosition;
+<<<<<<< Updated upstream
+=======
+=======
+            @TouchHold.started -= instance.OnTouchHold;
+            @TouchHold.performed -= instance.OnTouchHold;
+            @TouchHold.canceled -= instance.OnTouchHold;
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
         }
 
         public void RemoveCallbacks(ITouchActions instance)
@@ -222,6 +391,18 @@ public partial class @TouchControls: IInputActionCollection2, IDisposable
     {
         void OnTouchInput(InputAction.CallbackContext context);
         void OnTouchPress(InputAction.CallbackContext context);
+        void OnTouchDelta(InputAction.CallbackContext context);
         void OnTouchPosition(InputAction.CallbackContext context);
+<<<<<<< Updated upstream
+        void OnSecondTouchPress(InputAction.CallbackContext context);
+        void OnSecondTouchPosition(InputAction.CallbackContext context);
+=======
+<<<<<<< HEAD
+        void OnSecondTouchPress(InputAction.CallbackContext context);
+        void OnSecondTouchPosition(InputAction.CallbackContext context);
+=======
+        void OnTouchHold(InputAction.CallbackContext context);
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
+>>>>>>> Stashed changes
     }
 }

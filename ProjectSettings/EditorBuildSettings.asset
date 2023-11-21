@@ -6,6 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+    path: Assets/Scenes/CameraTest.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects: {}
+=======
+    path: Assets/Scenes/Test.unity
+    guid: 6efcf6629a67494448126dbbfc71a63d
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 53f054d5c181720419994b9cab128cd0,
+      type: 2}
+>>>>>>> fa4041157eea150cbc489a2dc63667e7be1886e9
