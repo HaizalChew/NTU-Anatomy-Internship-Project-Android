@@ -10,12 +10,14 @@ public class HideSelectionScript : MonoBehaviour
     public GameObject historyContainer;
     private GameObject historyCell;
     SelectRenderOutline renderOutlineScript;
+    UiManager uiManagerScript;
     List<Renderer> renderObjectList = new List<Renderer>();
 
     private void Awake()
     {
         mainCamera = Camera.main;
         renderOutlineScript = mainCamera.GetComponent<SelectRenderOutline>();
+        uiManagerScript = gameObject.GetComponent<UiManager>();
     }
     
     public void HideSelection()
@@ -30,23 +32,59 @@ public class HideSelectionScript : MonoBehaviour
                 renderObjectList[i].gameObject.SetActive(false);
                 Instantiate(renderObjectList[i].gameObject, historyCell.transform);
                 Destroy(renderObjectList[i].gameObject);
+                uiManagerScript.UpdateHistoryCount();
             }
             renderObjectList.Clear();
         }
+        //Update Undo Counter
+        StartCoroutine(uiManagerScript.UpdateHistoryCount());
     }
 
-    public void UnhideSelection()
+    public void UnhideSelection(bool reset = false)
     {
-        if(historyContainer.transform.childCount != 0)
+        int childCount = historyContainer.transform.childCount;
+        if(childCount != 0)
         {
-            Transform container = historyContainer.transform.GetChild(0);
+            Transform container = historyContainer.transform.GetChild(childCount - 1);
             foreach (Transform child in container)
             {
                 child.gameObject.SetActive(true);
                 Instantiate(child.gameObject, mainModel.transform);
             }
-            Destroy(container.gameObject);
+            DestroyImmediate(container.gameObject);
         }
+        if (!reset)
+        {
+            //Update Undo Counter
+            StartCoroutine(uiManagerScript.UpdateHistoryCount());
+        }
+    }
+    public int GetUndoCounter()
+    {
+        int undoCounter = historyContainer.transform.childCount;
+        return undoCounter;
+    }
+
+    public void ResetUnHide()
+    {
+        //Check for all history 
+        int childCount = historyContainer.transform.childCount;
+        if(childCount > 0)
+        {
+            for (int i = 0; i < childCount; i++)
+            {
+                Debug.Log(i);
+                UnhideSelection(true);
+                StartCoroutine(WaitForDestroy());
+                continue;
+            }
+        }
+        StartCoroutine(uiManagerScript.UpdateHistoryCount());
+    }
+
+    IEnumerator WaitForDestroy()
+    {
+        yield return new WaitForEndOfFrame();
     }
 
 }

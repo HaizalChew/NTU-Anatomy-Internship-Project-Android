@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class IsolateSelectionScript : MonoBehaviour
@@ -17,20 +18,35 @@ public class IsolateSelectionScript : MonoBehaviour
 
     public void IsolateSelection()
     {
-        bool isSelectedNull = CheckSelectedNull();
-        if (!isSelectedNull)
+        //Check if already isolated 
+        if (isIsolate)
         {
+            //Deactivate
             isIsolate = !isIsolate;
-            //Hide all child objects
             foreach (Transform child in mainModel.transform)
             {
                 child.gameObject.SetActive(!isIsolate);
             }
-            //Get seleceted objects and set active
-            Renderer[] selectedArray = CreateSelectionArray();
-            foreach (Renderer selected in selectedArray)
+        }
+        else
+        {
+            //Check if there is selection to isolate
+            bool isSelectedNull = CheckSelectedNull();
+            if (!isSelectedNull)
             {
-                selected.gameObject.SetActive(true);
+                //Activate
+                //Hide all child objects
+                isIsolate = !isIsolate;
+                foreach (Transform child in mainModel.transform)
+                {
+                    child.gameObject.SetActive(!isIsolate);
+                }
+                //Get selected objects and set active
+                Renderer[] selectedArray = CreateSelectionArray();
+                foreach (Renderer selected in selectedArray)
+                {
+                    selected.gameObject.SetActive(true);
+                }
             }
         }
     }
