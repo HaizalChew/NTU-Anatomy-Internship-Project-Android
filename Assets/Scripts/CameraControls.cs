@@ -9,32 +9,33 @@ using UnityEngine.EventSystems;
 public class CameraControls : MonoBehaviour
 {
     // Control camera focus
+    public Transform target;
+
     [SerializeField] Transform focus;
-    [SerializeField] public Transform target;
     [SerializeField] Transform orientation;
-    [SerializeField, Range(0.1f, 20f)] float distance = 5f;
+    [SerializeField, Range(0.5f, 3f)] float distance = 3f;
     [SerializeField, Min(0f)] float focusRadius = 1f;
     [SerializeField, Range(0f, 1f)] float focusCentering = 0.5f;
-    [SerializeField] public bool stopRecentering;
+
+    public bool stopRecentering;
     [SerializeField] float recenteringZoom = 3f;
 
     // Control orbit rotation expressed in degrees
-    [SerializeField, Range(1f, 360f)] float rotationSpeed = 90f;
+    [SerializeField] float rotationSpeed = 90f;
     [SerializeField, Range(-89f, 89f)] float minVerticalAngle = -30f, maxVerticalAngle = 60f;
     [SerializeField] float cameraPanningSensitivity = 1.0f;
-    [SerializeField] InputActionReference orbitDeltaInput, orbitUnlockInput, zoomInput, secondZoomInput, zoomUnlockInput;
+    [SerializeField] InputActionReference orbitDeltaInput, zoomInput, secondZoomInput, zoomUnlockInput;
 
     // Control camera zoom
     [SerializeField] LayerMask ignoreMask;
     [SerializeField] float zoomSpeed = 1f;
 
-    // Set orbit angles
-    Vector2 orbitAngles = new Vector2(45f, 0f);
+    // Control panning variables
+    [SerializeField] float maxPanningDistance = 10f;
 
-    //Vector3 focusPoint;
-    Vector3 newPositionPoint;
-    Vector2 lastInputPosition;
-    int UILayer;
+    // Set orbit angles
+    Vector2 orbitAngles = new(45f, 0f);
+
     float zoomDistance, pinchDelta, previousDistance;
 
 
@@ -44,22 +45,10 @@ public class CameraControls : MonoBehaviour
         //focusPoint = focus.position;
         transform.localRotation = Quaternion.Euler(orbitAngles);
 
-        UILayer = LayerMask.NameToLayer("UI");
-
         if (target == null)
         {
             target = GameObject.FindGameObjectWithTag("Model").transform;
         }
-    }
-
-    private void OnEnable()
-    {
-        //focusInput.action.performed += ctx => ActivateRecenteringOnButton();
-    }
-
-    private void OnDisable()
-    {
-        //focusInput.action.performed -= ctx => ActivateRecenteringOnButton();
     }
 
     void OnValidate()
@@ -105,7 +94,6 @@ public class CameraControls : MonoBehaviour
 
     }
 
-
     // This will update the focus pont everytime the model moves/changes
     // Applies easing in whenever it moves to prevent sharp snapping
     void UpdateFocusPoint()
@@ -140,7 +128,8 @@ public class CameraControls : MonoBehaviour
     public void ActivateRecenteringOnButton()
     {
         stopRecentering = false;
-        StartCoroutine(InterpolateZooming());   
+
+        StartCoroutine(InterpolateZooming());
     }
 
     IEnumerator InterpolateZooming()
@@ -162,13 +151,17 @@ public class CameraControls : MonoBehaviour
     // This will orbit the camera around the focus
     bool OrbitCamera()
     {
-        Vector2 input = new Vector2(-orbitDeltaInput.action.ReadValue<Vector2>().y, orbitDeltaInput.action.ReadValue<Vector2>().x);
+        Vector2 input = new(-orbitDeltaInput.action.ReadValue<Vector2>().y, orbitDeltaInput.action.ReadValue<Vector2>().x);
+        
+        if (float.IsInfinity(input.sqrMagnitude))
+        {
+            input = Vector2.zero;
+        }
 
         const float e = 0.001f;
-        if ((input.x < -e || input.x > e || input.y < -e || input.y > e) && orbitUnlockInput.action.IsPressed() && !zoomUnlockInput.action.IsPressed())
+        if ((input.x < -e || input.x > e || input.y < -e || input.y > e) && !zoomUnlockInput.action.IsPressed())
         {
             orbitAngles += rotationSpeed * Time.unscaledDeltaTime * input;
-
             
             return true;
         }
@@ -229,7 +222,7 @@ public class CameraControls : MonoBehaviour
             distance += zoomSpeed * Mathf.Abs(input);
         }
 
-        distance = Mathf.Clamp(distance, .1f, 20f);
+        distance = Mathf.Clamp(distance, .5f, 3f);
     }
 
     // This will control camera panning
@@ -245,12 +238,17 @@ public class CameraControls : MonoBehaviour
             orientation.forward = viewDir.normalized;
 
             Vector3 movement = orientation.up * direction.y + orientation.right * direction.x;
+            movement *= cameraPanningSensitivity;
 
-            Debug.Log(movement * cameraPanningSensitivity);
+            if (Vector3.Distance(focus.position + movement, target.position) >= maxPanningDistance)
+            {
+                movement = Vector3.zero;
+            }
 
-            focus.transform.Translate(movement * cameraPanningSensitivity);
+            focus.transform.Translate(movement);
 
         }
+
 
     }
 

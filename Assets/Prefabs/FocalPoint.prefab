@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 8580735002401583726}
   - component: {fileID: 8580735002401583721}
   - component: {fileID: 8580735002401583722}
+  - component: {fileID: 5731417200000708659}
+  - component: {fileID: 5425238405845280135}
+  - component: {fileID: 2093979073540128741}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -106,32 +109,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddad843730f271c4282c7dd3acae47a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  focus: {fileID: 8580735003447776348}
   target: {fileID: 0}
+  focus: {fileID: 8580735003447776348}
   orientation: {fileID: 8580735002919774391}
   distance: 5
   focusRadius: 1
   focusCentering: 0.5
   stopRecentering: 0
   recenteringZoom: 3
-  rotationSpeed: 90
-  minVerticalAngle: -30
-  maxVerticalAngle: 60
-  cameraPanningSensitivity: 1
-  orbitLookInput: {fileID: -4357323021904490931, guid: d86caade47990a944aa314dff5f27237,
+  rotationSpeed: 10
+  minVerticalAngle: -89
+  maxVerticalAngle: 89
+  cameraPanningSensitivity: 0.1
+  orbitDeltaInput: {fileID: -5402994826725837782, guid: 7352d33be1b5ee749a68cc7796e95638,
     type: 3}
-  orbitUnlockInput: {fileID: 6991840353829052109, guid: d86caade47990a944aa314dff5f27237,
+  zoomInput: {fileID: 4260492807722418516, guid: 7352d33be1b5ee749a68cc7796e95638,
     type: 3}
-  panUnlockInput: {fileID: -3213935088973138889, guid: d86caade47990a944aa314dff5f27237,
+  secondZoomInput: {fileID: -3341210836632376916, guid: 7352d33be1b5ee749a68cc7796e95638,
     type: 3}
-  focusInput: {fileID: 4811017476606095658, guid: d86caade47990a944aa314dff5f27237,
-    type: 3}
-  zoomScrollInput: {fileID: 2617239034850158910, guid: d86caade47990a944aa314dff5f27237,
+  zoomUnlockInput: {fileID: -5369701449933774250, guid: 7352d33be1b5ee749a68cc7796e95638,
     type: 3}
   ignoreMask:
     serializedVersion: 2
     m_Bits: 0
-  zoomSpeed: 1
+  zoomSpeed: 5
 --- !u!114 &8580735002401583722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: d86caade47990a944aa314dff5f27237,
+  m_Actions: {fileID: -944628639613478452, guid: 7352d33be1b5ee749a68cc7796e95638,
     type: 3}
   m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
@@ -160,9 +161,83 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
+  m_DefaultActionMap: Touch
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5731417200000708659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8580735002401583725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
+--- !u!114 &5425238405845280135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8580735002401583725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bd4adfb69ffec46b8b0b6ff4d10b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RenderObject: []
+  WriteObject: {fileID: 2100000, guid: 211dcae1ae80b8f418c66fda81c4e91d, type: 2}
+  SelectOutline: {fileID: 2100000, guid: acae54d378095cd49aa6df84930e1d2e, type: 2}
+--- !u!114 &2093979073540128741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8580735002401583725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 257ed27a317e6564390e5e4aed417ab7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectRenderObject: []
+  WriteObject: {fileID: 2100000, guid: b287ffa4486387c4190966b8d97f9fb2, type: 2}
+  SelectOutline: {fileID: 2100000, guid: dc5de1f9990d7c647b173f553270b1e4, type: 2}
 --- !u!1 &8580735002919774390
 GameObject:
   m_ObjectHideFlags: 0
