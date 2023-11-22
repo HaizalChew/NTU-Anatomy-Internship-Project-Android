@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutlineMat
-  m_Shader: {fileID: 4800000, guid: e55fd578fe3af494abb8242b219eea85, type: 3}
+  m_Name: SelectWriteMat
+  m_Shader: {fileID: 4800000, guid: 05b1c999b8bde7d4ea9e4490c634027c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,8 +28,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats:
-    - _OutlineWidth: 0.003
-    m_Colors:
-    - _OutlineColor: {r: 1, g: 0.92627656, b: 0, a: 1}
+    m_Floats: []
+    m_Colors: []
   m_BuildTextureStacks: []

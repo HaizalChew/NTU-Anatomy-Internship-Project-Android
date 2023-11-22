@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class RenderOutline : MonoBehaviour
+public class SelectRenderOutline : MonoBehaviour
 {
-    public List<Renderer> RenderObject = new List<Renderer>();
+    public List<Renderer> SelectRenderObject = new List<Renderer>();
 
     public Material WriteObject;
 
@@ -14,15 +14,15 @@ public class RenderOutline : MonoBehaviour
     {
         //setup stuff
         var commands = new CommandBuffer();
-        commands.name = "Test2";
+        commands.name = "Test";
         int selectionBuffer = Shader.PropertyToID("_SelectionBuffer");
         commands.GetTemporaryRT(selectionBuffer, source.descriptor);
         //render selection buffer
         commands.SetRenderTarget(selectionBuffer);
         commands.ClearRenderTarget(true, true, Color.clear);
-        if (RenderObject != null)
+        if (SelectRenderObject != null)
         {
-            foreach (Renderer renderObj in RenderObject)
+            foreach (Renderer renderObj in SelectRenderObject)
             {
                 commands.DrawRenderer(renderObj, WriteObject);
             }
