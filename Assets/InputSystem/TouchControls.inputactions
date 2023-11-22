@@ -31,8 +31,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-<<<<<<< Updated upstream
-=======
                 },
                 {
                     "name": "TouchHold",
@@ -69,7 +67,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
->>>>>>> Stashed changes
                 }
             ],
             "bindings": [
@@ -105,8 +102,6 @@
                     "action": "TouchPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
-<<<<<<< Updated upstream
-=======
                 },
                 {
                     "name": "",
@@ -151,7 +146,6 @@
                     "action": "SecondaryTouchPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
->>>>>>> Stashed changes
                 }
             ]
         }
