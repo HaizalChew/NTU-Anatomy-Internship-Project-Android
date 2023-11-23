@@ -7,17 +7,28 @@ using TMPro;
 
 public class UiManager : MonoBehaviour
 {
+    private Camera mainCamera;
     private IsolateSelectionScript isolateScript;
     private HideSelectionScript hideScript;
+    private OutlineSelectedPart outlineSelectedPart;
+    private RenderOutline renderOutline;
+    public InputManager inputManager;
+    private PartSelect partSelect;
 
     public GameObject[] isolateButtonsList;
     public GameObject isolateBtn;
     public TextMeshProUGUI undoText;
 
+    public bool isMultiSelect;
+
     private void Awake()
     {
+        mainCamera = Camera.main;
         isolateScript = gameObject.GetComponent<IsolateSelectionScript>();
         hideScript = gameObject.GetComponent<HideSelectionScript>();
+        partSelect = gameObject.GetComponent<PartSelect>();
+        outlineSelectedPart = gameObject.GetComponent<OutlineSelectedPart>();
+        renderOutline = mainCamera.GetComponent<RenderOutline>();
         Button button = isolateBtn.GetComponent<Button>();
         button.onClick.AddListener(delegate { HideUiElement(isolateButtonsList,isolateScript.isIsolate); });
     }
@@ -45,5 +56,33 @@ public class UiManager : MonoBehaviour
             }
         }
         return isToggle;
+    }
+
+    public void ToggleMultiSelectMode()
+    {
+        isMultiSelect = !isMultiSelect;
+        renderOutline.RenderObject.Clear();
+        if (isMultiSelect)
+        {
+            inputManager.OnStartTouch -= partSelect.ToggleSelectPart;
+            inputManager.OnStartTouch -= outlineSelectedPart.OutlineSelected;
+            inputManager.OnStartTouch += partSelect.ToggleMultiSelect;
+            inputManager.OnStartTouch += outlineSelectedPart.OutlineMultiSelected;
+
+            //Clear selections
+            partSelect.selectedObject = null;
+            
+
+        }
+        else
+        {
+            inputManager.OnStartTouch += partSelect.ToggleSelectPart;
+            inputManager.OnStartTouch += outlineSelectedPart.OutlineSelected;
+            inputManager.OnStartTouch -= partSelect.ToggleMultiSelect;
+            inputManager.OnStartTouch -= outlineSelectedPart.OutlineMultiSelected;
+
+            //Clear selections
+            partSelect.multiSelectedObjects.Clear();
+        }
     }
 }

@@ -9,32 +9,68 @@ public class HideSelectionScript : MonoBehaviour
     public GameObject mainModel;
     public GameObject historyContainer;
     private GameObject historyCell;
-    SelectRenderOutline renderOutlineScript;
-    UiManager uiManagerScript;
-    List<Renderer> renderObjectList = new List<Renderer>();
-
+    private UiManager uiManagerScript;
+    private PartSelect partSelect;
+    private RenderOutline renderOutline;
+    //List<Renderer> renderObjectList = new List<Renderer>();
+    List<GameObject> selectedObjectList = new List<GameObject>();
     private void Awake()
     {
         mainCamera = Camera.main;
-        renderOutlineScript = mainCamera.GetComponent<SelectRenderOutline>();
         uiManagerScript = gameObject.GetComponent<UiManager>();
+        renderOutline = mainCamera.GetComponent<RenderOutline>();
+        partSelect = gameObject.GetComponent<PartSelect>();
     }
     
     public void HideSelection()
     {
-        renderObjectList = renderOutlineScript.SelectRenderObject;
-        if (renderObjectList.Count != 0)
+        //Check if got selection
+        bool isMultiSelect = uiManagerScript.isMultiSelect;
+        PartSelect.SelectionState state = partSelect.IsSelectionNull();
+        if (isMultiSelect)
         {
+            if (state.multiSelect == false)
+            {
+                Debug.Log("yes");
+                Debug.Log(state.multiSelect);
+                if (partSelect.multiSelectedObjects.Count > 0)
+                {
+                    Debug.Log(selectedObjectList);
+                    selectedObjectList = partSelect.multiSelectedObjects;
+                    Debug.Log(selectedObjectList);
+                    renderOutline.RenderObject.Clear();
+                    Debug.Log(selectedObjectList.Count);
+                }
+            }
+        }
+        else
+        {
+            if (state.singleSelect == false)
+            {
+                Debug.Log("yes");
+                Debug.Log(state.singleSelect);
+                selectedObjectList.Add(partSelect.selectedObject);
+                partSelect.selectedObject = null;
+                renderOutline.RenderObject.Clear();
+            }
+        }
+        Debug.Log("here");
+        Debug.Log(selectedObjectList.Count);
+
+        //Create history cell
+        if (selectedObjectList.Count > 0)
+        {
+            Debug.Log("creating");
             historyCell = new GameObject("Container");
             historyCell.transform.parent = historyContainer.transform;
-            for(int i = 0; i < renderObjectList.Count; i++)
+            for(int i = 0; i < selectedObjectList.Count; i++)
             {
-                renderObjectList[i].gameObject.SetActive(false);
-                Instantiate(renderObjectList[i].gameObject, historyCell.transform);
-                Destroy(renderObjectList[i].gameObject);
+                selectedObjectList[i].gameObject.SetActive(false);
+                Instantiate(selectedObjectList[i].gameObject, historyCell.transform);
+                Destroy(selectedObjectList[i].gameObject);
                 uiManagerScript.UpdateHistoryCount();
             }
-            renderObjectList.Clear();
+            selectedObjectList.Clear();
         }
         //Update Undo Counter
         StartCoroutine(uiManagerScript.UpdateHistoryCount());

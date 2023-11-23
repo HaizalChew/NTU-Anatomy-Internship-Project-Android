@@ -6,18 +6,22 @@ public class IsolateSelectionScript : MonoBehaviour
     public GameObject mainModel;
 
     private Camera mainCamera;
-    private SelectRenderOutline selectOutlineScript;
+    private PartSelect partSelect;
+    private UiManager uiManager;
 
     public bool isIsolate;
     // Start is called before the first frame update
     void Awake()
     {
         mainCamera = Camera.main;
-        selectOutlineScript = mainCamera.GetComponent<SelectRenderOutline>();
+        partSelect = gameObject.GetComponent<PartSelect>();
+        uiManager = gameObject.GetComponent<UiManager>();
     }
 
     public void IsolateSelection()
     {
+        //Get MultiSelect Mode 
+        bool isMultiSelect = uiManager.isMultiSelect;
         //Check if already isolated 
         if (isIsolate)
         {
@@ -31,7 +35,7 @@ public class IsolateSelectionScript : MonoBehaviour
         else
         {
             //Check if there is selection to isolate
-            bool isSelectedNull = CheckSelectedNull();
+            bool isSelectedNull = CheckSelectedNull(isMultiSelect);
             if (!isSelectedNull)
             {
                 //Activate
@@ -42,7 +46,7 @@ public class IsolateSelectionScript : MonoBehaviour
                     child.gameObject.SetActive(!isIsolate);
                 }
                 //Get selected objects and set active
-                Renderer[] selectedArray = CreateSelectionArray();
+                Renderer[] selectedArray = CreateSelectionArray(isMultiSelect);
                 foreach (Renderer selected in selectedArray)
                 {
                     selected.gameObject.SetActive(true);
@@ -51,23 +55,43 @@ public class IsolateSelectionScript : MonoBehaviour
         }
     }
 
-    private bool CheckSelectedNull()
+    private bool CheckSelectedNull(bool IsMultiSelect)
     {
-        if(selectOutlineScript.SelectRenderObject.Count == 0)
+        if (IsMultiSelect)
         {
-            return true;
+            if(partSelect.multiSelectedObjects.Count == 0)
+            {
+                return true;
+            }
+            return false;
         }
-        return false;
+        else
+        {
+            if (partSelect.selectedObject is null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
-    private Renderer[] CreateSelectionArray()
+    private Renderer[] CreateSelectionArray(bool isMultiSelect)
     {
-        Renderer[] array = new Renderer[selectOutlineScript.SelectRenderObject.Count];
-        for (int i = 0; i < selectOutlineScript.SelectRenderObject.Count; i++)
+        if (isMultiSelect)
         {
-            array[i] = selectOutlineScript.SelectRenderObject[i];
+            Renderer[] array = new Renderer[partSelect.multiSelectedObjects.Count];
+            for (int i = 0; i < partSelect.multiSelectedObjects.Count; i++)
+            {
+                array[i] = partSelect.multiSelectedObjects[i].GetComponent<Renderer>();
+            }
+            return array;
         }
-        return array;
+        else
+        {
+            Renderer[] array = new Renderer[1];
+            array[0] = partSelect.selectedObject.GetComponent<Renderer>();
+            return array;
+        }
     }
 
 }
