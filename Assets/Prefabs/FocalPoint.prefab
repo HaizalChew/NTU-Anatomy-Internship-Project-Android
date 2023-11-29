@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 8580735002401583722}
   - component: {fileID: 5731417200000708659}
   - component: {fileID: 5425238405845280135}
-  - component: {fileID: 2093979073540128741}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -112,7 +111,7 @@ MonoBehaviour:
   target: {fileID: 0}
   focus: {fileID: 8580735003447776348}
   orientation: {fileID: 8580735002919774391}
-  distance: 5
+  distance: 3
   focusRadius: 1
   focusCentering: 0.5
   stopRecentering: 0
@@ -133,6 +132,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   zoomSpeed: 5
+  maxPanningDistance: 10
 --- !u!114 &8580735002401583722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,21 +223,6 @@ MonoBehaviour:
   RenderObject: []
   WriteObject: {fileID: 2100000, guid: 211dcae1ae80b8f418c66fda81c4e91d, type: 2}
   SelectOutline: {fileID: 2100000, guid: acae54d378095cd49aa6df84930e1d2e, type: 2}
---- !u!114 &2093979073540128741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8580735002401583725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 257ed27a317e6564390e5e4aed417ab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SelectRenderObject: []
-  WriteObject: {fileID: 2100000, guid: b287ffa4486387c4190966b8d97f9fb2, type: 2}
-  SelectOutline: {fileID: 2100000, guid: dc5de1f9990d7c647b173f553270b1e4, type: 2}
 --- !u!1 &8580735002919774390
 GameObject:
   m_ObjectHideFlags: 0
