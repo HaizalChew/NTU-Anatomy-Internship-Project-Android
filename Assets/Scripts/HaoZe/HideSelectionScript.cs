@@ -12,6 +12,8 @@ public class HideSelectionScript : MonoBehaviour
     private UiManager uiManagerScript;
     private PartSelect partSelect;
     private RenderOutline renderOutline;
+
+    private GameObject clone;
     //List<Renderer> renderObjectList = new List<Renderer>();
     List<GameObject> selectedObjectList = new List<GameObject>();
     private void Awake()
@@ -66,7 +68,8 @@ public class HideSelectionScript : MonoBehaviour
             for(int i = 0; i < selectedObjectList.Count; i++)
             {
                 selectedObjectList[i].gameObject.SetActive(false);
-                Instantiate(selectedObjectList[i].gameObject, historyCell.transform);
+                clone = Instantiate(selectedObjectList[i].gameObject, historyCell.transform);
+                clone.name = selectedObjectList[i].name;
                 Destroy(selectedObjectList[i].gameObject);
                 uiManagerScript.UpdateHistoryCount();
             }
@@ -85,7 +88,8 @@ public class HideSelectionScript : MonoBehaviour
             foreach (Transform child in container)
             {
                 child.gameObject.SetActive(true);
-                Instantiate(child.gameObject, mainModel.transform);
+                clone = Instantiate(child.gameObject, mainModel.transform);
+                clone.name = child.name;
             }
             DestroyImmediate(container.gameObject);
         }
