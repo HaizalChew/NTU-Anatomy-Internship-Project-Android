@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PartSelect : MonoBehaviour
@@ -12,6 +9,7 @@ public class PartSelect : MonoBehaviour
     private OutlineSelectedPart outlineSelectedPart;
     private SortAndConvertList convertScript;
     public InputManager inputManager;
+    public UiManager uiManager;
 
     public GameObject selectedObject;
     public List<GameObject> multiSelectedObjects = new List<GameObject>();
@@ -37,6 +35,7 @@ public class PartSelect : MonoBehaviour
         outlineScript = mainCamera.GetComponent<RenderOutline>();
         outlineSelectedPart = gameObject.GetComponent<OutlineSelectedPart>();
         convertScript = gameObject.GetComponent<SortAndConvertList>();
+        uiManager = gameObject.GetComponent<UiManager>();
     }
 
     private void OnEnable()
@@ -49,8 +48,6 @@ public class PartSelect : MonoBehaviour
     {
         inputManager.OnEndTouch -= ToggleSelectPart;
     }
-
-
 
     public void ToggleSelectPart(Vector2 screenPosition, float time)
     {
@@ -86,6 +83,9 @@ public class PartSelect : MonoBehaviour
                 currentSelectedObject = null;
             }
         }
+        //Display select text
+
+        uiManager.DisplaySelectName(uiManager.isMultiSelect);
     }
 
     public void ToggleMultiSelect(Vector2 screenPosition, float time)
@@ -136,6 +136,8 @@ public class PartSelect : MonoBehaviour
                 multiSelectedObjects.Add(chosenObject);
             }
         }
+
+        uiManager.DisplaySelectName(uiManager.isMultiSelect);
     }
 
     private TouchData GetTouchData(Vector2 screenPosition)
@@ -181,5 +183,17 @@ public class PartSelect : MonoBehaviour
             state.singleSelect = true;
         }
         return state;
+    }
+
+    public void ClearSelection()
+    {
+        if (uiManager.isMultiSelect)
+        {
+            multiSelectedObjects.Clear();
+        }
+        else
+        {
+            selectedObject = null;
+        }
     }
 }

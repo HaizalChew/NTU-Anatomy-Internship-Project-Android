@@ -1,8 +1,8 @@
-Shader "Unlit/ApplyOutline"
+Shader"Unlit/ApplyOutline"
 {
     Properties
     {
-        [HideInInspector]_MainTex ("Texture", 2D) = "white" {}
+        _MainTex ("Texture", 2D) = "white" {}
         _OutlineWidth ("OutlineWidth", Range(0, 1)) = 1
         _OutlineColor ("OutlineColor", Color) = (1, 1, 1, 1)
     }

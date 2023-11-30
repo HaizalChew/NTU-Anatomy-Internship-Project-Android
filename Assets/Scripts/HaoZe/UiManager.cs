@@ -18,6 +18,8 @@ public class UiManager : MonoBehaviour
     public GameObject[] isolateButtonsList;
     public GameObject isolateBtn;
     public TextMeshProUGUI undoText;
+    public TextMeshProUGUI selectText;
+    public TextMeshProUGUI isolateText;
 
     public bool isMultiSelect;
 
@@ -31,6 +33,35 @@ public class UiManager : MonoBehaviour
         renderOutline = mainCamera.GetComponent<RenderOutline>();
         Button button = isolateBtn.GetComponent<Button>();
         button.onClick.AddListener(delegate { HideUiElement(isolateButtonsList,isolateScript.isIsolate); });
+    }
+
+    public void DisplaySelectName(bool isMultiSelect)
+    {
+        Debug.Log(isMultiSelect);
+        if(isMultiSelect)
+        {
+            int count = partSelect.multiSelectedObjects.Count;
+            if(count > 0)
+            {
+                Debug.Log("yes");
+                selectText.text = partSelect.multiSelectedObjects[count-1].name;
+            }
+            else
+            {
+                selectText.text = null;
+            }
+        }
+        else
+        {
+            if (partSelect.selectedObject != null)
+            {
+                selectText.text = partSelect.selectedObject.name;
+            }
+            else
+            {
+                selectText.text = null;
+            }
+        }
     }
 
     public IEnumerator UpdateHistoryCount()

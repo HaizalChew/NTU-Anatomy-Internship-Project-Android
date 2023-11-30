@@ -68,7 +68,7 @@ public class InputManager : MonoBehaviour
                 case UnityEngine.InputSystem.TouchPhase.Ended:
                     if (touch.time > touch.startTime + 0.5)
                     {
-                        OnPerformHold(touchControls.Touch.TouchPosition.ReadValue<Vector2>(), (float)touch.startTime);
+
                     }
                     else
                     {

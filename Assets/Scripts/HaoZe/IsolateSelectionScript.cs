@@ -31,6 +31,7 @@ public class IsolateSelectionScript : MonoBehaviour
             {
                 child.gameObject.SetActive(!isIsolate);
             }
+            uiManager.isolateText.text = "Isolate";
         }
         else
         {
@@ -51,6 +52,7 @@ public class IsolateSelectionScript : MonoBehaviour
                 {
                     selected.gameObject.SetActive(true);
                 }
+                uiManager.isolateText.text = "Unisolate";
             }
         }
     }
