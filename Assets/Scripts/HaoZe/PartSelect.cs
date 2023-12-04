@@ -90,7 +90,6 @@ public class PartSelect : MonoBehaviour
 
     public void ToggleMultiSelect(Vector2 screenPosition, float time)
     {
-        Debug.Log("crash");
         GameObject chosenObject = null;
         TouchData touchData = GetTouchData(screenPosition);
         if (touchData.isSelectable)
@@ -98,7 +97,6 @@ public class PartSelect : MonoBehaviour
             //Select Part
             for (int i = 0; i < touchData.hitList.Count; i++)
             {
-                Debug.Log("crash");
                 RaycastHit hitData = touchData.hitList[i].Key;
                 //Detect if hit object is transparent
                 if (hitData.transform.GetComponent<MeshRenderer>().material.GetFloat("_Mode") == 3)

@@ -37,7 +37,6 @@ public class UiManager : MonoBehaviour
 
     public void DisplaySelectName(bool isMultiSelect)
     {
-        Debug.Log(isMultiSelect);
         if(isMultiSelect)
         {
             int count = partSelect.multiSelectedObjects.Count;
