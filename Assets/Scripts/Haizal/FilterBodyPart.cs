@@ -1,17 +1,24 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using TMPro;
 
 public class FilterBodyPart : MonoBehaviour
 {
     public Transform parentModel;
     public Transform partListParent;
-    [SerializeField] GameObject anatomyGroupPrefab;
-    [SerializeField] GameObject partListPrefab;
+    [SerializeField] GameObject filterListPrefab;
+    [SerializeField] GameObject[] uiElements;
+    [SerializeField] TMP_Text warningMessage;
 
-    Dictionary<string, GameObject> partDict = new Dictionary<string, GameObject>();
+    struct FilterStruct
+    {
+        public Transform refrencedObj;
+        public StrictButtonExtension buttonToggle;
+    }
+
+    List<FilterStruct> filters = new List<FilterStruct>();
 
     private void Awake()
     {
@@ -32,78 +39,57 @@ public class FilterBodyPart : MonoBehaviour
         // Hierachy:
         // Parent
         // --> AnatomyGroup
-        // --> --> BodyPart
         foreach (Transform child in parentModel)
         {
-            GameObject _anatomyGroup = Instantiate(anatomyGroupPrefab, partListParent);
+            GameObject _anatomyGroup = Instantiate(filterListPrefab, partListParent);
 
             _anatomyGroup.transform.GetComponentInChildren<TMP_Text>().text = child.name;
             _anatomyGroup.name = child.name;
 
-            if (child.childCount > 0)
-            {
-                for (int j = 0; j < child.childCount; j++)
-                {
-                    GameObject _spawnName = Instantiate(partListPrefab, _anatomyGroup.transform);
-                    // _spawnName.GetComponent<StoredScript>().referencedGameObject = child.GetChild(j).gameObject;
-                    string _name = child.GetChild(j).name;
+            FilterStruct _filterStruct = new FilterStruct();
+            _filterStruct.refrencedObj = child;
+            _filterStruct.buttonToggle = _anatomyGroup.GetComponent<StrictButtonExtension>();
 
-                    _spawnName.GetComponentInChildren<TMP_Text>().text = _name;
-                    _spawnName.name = _name;
-
-                    partDict.Add(_name.ToLower(), _spawnName);
-                }
-            }
+            filters.Add(_filterStruct);
         }
     }
 
-    public void SearchForPart(TMP_InputField input)
+    public void HideOrShowFilteredBodyParts()
     {
-        if (input.text != "")
-        {
-            var parts = partDict.Where(kvp => kvp.Key.Contains(input.text.ToLower()));
-
-            foreach (Transform child in partListParent)
+        if (!CheckIfAllIsSelected())
+        {         
+            foreach (FilterStruct filterStruct in filters)
             {
-                if (child.childCount > 0)
-                {
-                    for (int j = 0; j < child.childCount; j++)
-                    {
-                        Transform _childChild = child.GetChild(j);
-                        
-                        if (_childChild.tag == "IgnoreUI")
-                        {
-                            _childChild.gameObject.SetActive(true);
-                        }
-                        else
-                        {
-                            _childChild.gameObject.SetActive(false);
-                        }
-                    }
-                }
+                filterStruct.refrencedObj.gameObject.SetActive(!filterStruct.buttonToggle.isOn);
             }
 
-            foreach (KeyValuePair<string, GameObject> part in parts)
+            foreach (GameObject ui in uiElements)
             {
-                part.Value.gameObject.SetActive(true);
+                ui.SetActive(false);
             }
 
-
+            warningMessage.text = "";
         }
         else
         {
-            foreach (Transform child in partListParent)
+            warningMessage.text = "You cannot hide all body parts.";
+        }
+        
+    }
+
+    bool CheckIfAllIsSelected()
+    {
+        bool currentBoolIsSetToTrue = true;
+
+        foreach (FilterStruct filterStruct in filters)
+        {
+            if (!filterStruct.buttonToggle.isOn)
             {
-                if (child.childCount > 0)
-                {
-                    for (int j = 0; j < child.childCount; j++)
-                    {
-                        child.GetChild(j).gameObject.SetActive(true);
-                    }
-                }
+                currentBoolIsSetToTrue = false;
+                break;
             }
         }
 
+        return currentBoolIsSetToTrue;
     }
-
 }
