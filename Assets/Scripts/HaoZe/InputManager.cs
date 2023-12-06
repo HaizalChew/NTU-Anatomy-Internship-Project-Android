@@ -11,7 +11,7 @@ public class InputManager : MonoBehaviour
     public delegate void EndTouchEvent(Vector2 position, float time);
     public event EndTouchEvent OnEndTouch;
 
-    public delegate void PerformHoldEvent(Vector2 position, float time, Vector2 deltaPos);
+    public delegate void PerformHoldEvent(Vector2 position, float time, Transform hit);
     public event PerformHoldEvent OnPerformHold;
 
     private TouchControls touchControls;
@@ -21,6 +21,9 @@ public class InputManager : MonoBehaviour
     public Camera mainCamera;
     public PartSelect partSelect;
     public CameraControls camControls;
+    public UiManager uiManager;
+
+    private Transform transformHit;
 
     private void Awake()
     {
@@ -70,22 +73,47 @@ public class InputManager : MonoBehaviour
                 case UnityEngine.InputSystem.TouchPhase.Began:
                     //if move mode is true
                     //Get object position 
-                    Debug.Log("Began");
                     Ray ray = mainCamera.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
                     RaycastHit hit;
                     isMoveSelected = false;
-                    if(partSelect.selectedObject != null)
+                    if (uiManager.isMultiSelect)
                     {
-                        if (Physics.Raycast(ray, out hit))
+                        if(partSelect.multiSelectedObjects.Count > 0)
                         {
-                            Debug.Log(hit.transform.gameObject);
-                            if (hit.transform.gameObject == partSelect.selectedObject)
+                            if(Physics.Raycast(ray,out hit))
                             {
-                                isMoveSelected = true;
+                                Debug.Log("Sent");
+                                foreach (GameObject selectedObj in partSelect.multiSelectedObjects)
+                                {
+                                    if(selectedObj == hit.transform.gameObject)
+                                    {
+                                        Debug.Log("hit");
+                                        transformHit = hit.transform;
+                                        isMoveSelected = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        isMoveSelected = false;
+                                    }
+                                }
                             }
-                            else
+                        }
+                    }
+                    else
+                    {
+                        if (partSelect.selectedObject != null)
+                        {
+                            if (Physics.Raycast(ray, out hit))
                             {
-                                isMoveSelected = false;
+                                if (hit.transform.gameObject == partSelect.selectedObject)
+                                {
+                                    isMoveSelected = true;
+                                }
+                                else
+                                {
+                                    isMoveSelected = false;
+                                }
                             }
                         }
                     }
@@ -94,7 +122,7 @@ public class InputManager : MonoBehaviour
                     if(touch.time > touch.startTime + 0.5 && isMoveSelected == true)
                     {
                         camControls.enabled = false;
-                        OnPerformHold(touchControls.Touch.TouchPosition.ReadValue<Vector2>(), (float)touch.startTime, touch.delta);
+                        OnPerformHold(touchControls.Touch.TouchPosition.ReadValue<Vector2>(), (float)touch.startTime, transformHit);
                     }
                     break;
                 case UnityEngine.InputSystem.TouchPhase.Ended:

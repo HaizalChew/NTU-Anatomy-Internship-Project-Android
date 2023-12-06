@@ -76,6 +76,7 @@ public class PartSelect : MonoBehaviour
                     break;
                 }
             }
+
             //Unselect Part 
             if (selectedObject == currentSelectedObject)
             {
@@ -83,6 +84,7 @@ public class PartSelect : MonoBehaviour
                 currentSelectedObject = null;
             }
         }
+            
         //Display select text
 
         uiManager.DisplaySelectName(uiManager.isMultiSelect);
@@ -113,7 +115,6 @@ public class PartSelect : MonoBehaviour
             }
             bool alrSelected = false;
             //Check if selected alr
-            Debug.Log("crash");
             if (multiSelectedObjects.Count > 0)
             {
                 //Unselect Part 
@@ -126,7 +127,6 @@ public class PartSelect : MonoBehaviour
                         break;
                     }
                 }
-                Debug.Log("crash");
             }
             if(!alrSelected)
             {

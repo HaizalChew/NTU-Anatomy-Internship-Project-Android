@@ -53,7 +53,6 @@ public class OutlineSelectedPart : MonoBehaviour
         }
         if(partSelect.multiSelectedObjects.Count == 0)
         {
-            Debug.Log("ckler");
             renderOutline.enabled = false;
             renderOutline.RenderObject.Clear();
         }

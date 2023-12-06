@@ -33,15 +33,10 @@ public class HideSelectionScript : MonoBehaviour
         {
             if (state.multiSelect == false)
             {
-                Debug.Log("yes");
-                Debug.Log(state.multiSelect);
                 if (partSelect.multiSelectedObjects.Count > 0)
                 {
-                    Debug.Log(selectedObjectList);
                     selectedObjectList = partSelect.multiSelectedObjects;
-                    Debug.Log(selectedObjectList);
                     renderOutline.RenderObject.Clear();
-                    Debug.Log(selectedObjectList.Count);
                 }
             }
         }
@@ -49,21 +44,18 @@ public class HideSelectionScript : MonoBehaviour
         {
             if (state.singleSelect == false)
             {
-                Debug.Log("yes");
-                Debug.Log(state.singleSelect);
                 selectedObjectList.Add(partSelect.selectedObject);
                 partSelect.selectedObject = null;
                 renderOutline.RenderObject.Clear();
             }
         }
-        Debug.Log("here");
-        Debug.Log(selectedObjectList.Count);
 
         //Create history cell
         if (selectedObjectList.Count > 0)
         {
             Debug.Log("creating");
-            historyCell = new GameObject("Container");
+            int count = historyContainer.transform.childCount + 1;
+            historyCell = new GameObject("Undo " + count);
             historyCell.transform.parent = historyContainer.transform;
             for(int i = 0; i < selectedObjectList.Count; i++)
             {
@@ -77,6 +69,8 @@ public class HideSelectionScript : MonoBehaviour
         }
         //Update Undo Counter
         StartCoroutine(uiManagerScript.UpdateHistoryCount());
+        //Update History Panel
+        uiManagerScript.UpdateHistoryPanel();
     }
 
     public void UnhideSelection(bool reset = false)
@@ -97,6 +91,22 @@ public class HideSelectionScript : MonoBehaviour
         {
             //Update Undo Counter
             StartCoroutine(uiManagerScript.UpdateHistoryCount());
+            uiManagerScript.UpdateHistoryPanel();
+        }
+    }
+
+    public void HistoryShowHide(Transform undoContainer)
+    {
+        foreach (Transform childObject in undoContainer)
+        {
+            if (childObject.gameObject.activeSelf == true)
+            {
+                childObject.gameObject.SetActive(false);
+            }
+            else
+            {
+                childObject.gameObject.SetActive(true);
+            }
         }
     }
     public int GetUndoCounter()
@@ -120,6 +130,7 @@ public class HideSelectionScript : MonoBehaviour
             }
         }
         StartCoroutine(uiManagerScript.UpdateHistoryCount());
+        uiManagerScript.UpdateHistoryPanel();
     }
 
     IEnumerator WaitForDestroy()

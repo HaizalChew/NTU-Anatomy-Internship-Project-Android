@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor.Rendering;
+using Unity.VisualScripting;
 
 public class UiManager : MonoBehaviour
 {
@@ -21,7 +22,13 @@ public class UiManager : MonoBehaviour
     public TextMeshProUGUI selectText;
     public TextMeshProUGUI isolateText;
 
+    public GameObject undoHistoryPanel;
+    public GameObject moveHistoryPanel;
+    public GameObject historyContainerPanel;
+    public GameObject testChild;
+
     public bool isMultiSelect;
+    public GameObject testBtn;
 
     private void Awake()
     {
@@ -35,6 +42,31 @@ public class UiManager : MonoBehaviour
         button.onClick.AddListener(delegate { HideUiElement(isolateButtonsList,isolateScript.isIsolate); });
     }
 
+    public void UpdateHistoryPanel()
+    {
+        if(undoHistoryPanel.transform.childCount > 0)
+        {
+            foreach(Transform child in undoHistoryPanel.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        foreach(Transform child in hideScript.historyContainer.transform)
+        {
+            GameObject clone = Instantiate(testBtn, undoHistoryPanel.transform);
+            clone.GetComponent<Button>().onClick.AddListener(delegate { hideScript.HistoryShowHide(child.transform); });
+            clone.GetComponentInChildren<TextMeshProUGUI>().text = child.transform.name;
+        }
+
+    }
+
+    public void SayHi()
+    {
+        Debug.Log("yo");
+    }
+   
+
     public void DisplaySelectName(bool isMultiSelect)
     {
         if(isMultiSelect)
@@ -42,7 +74,6 @@ public class UiManager : MonoBehaviour
             int count = partSelect.multiSelectedObjects.Count;
             if(count > 0)
             {
-                Debug.Log("yes");
                 selectText.text = partSelect.multiSelectedObjects[count-1].name;
             }
             else

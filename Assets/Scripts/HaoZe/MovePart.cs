@@ -8,6 +8,7 @@ public class MovePart : MonoBehaviour
     public InputManager inputManager;
     private PartSelect partSelect;
     public Camera mainCamera;
+    public UiManager uiManager;
     public List<movedObjectData> movedObjectList = new List<movedObjectData>();
 
     [System.Serializable]
@@ -33,49 +34,111 @@ public class MovePart : MonoBehaviour
         inputManager.OnPerformHold -= MovePartPosition;
     }
 
-    private void MovePartPosition(Vector2 screenPosition, float time, Vector2 deltaPos)
+    // x = selected
+    // y = history
+    private bool CheckSelectedInList(int x)
     {
-        //Get MoveData to save
-        Debug.Log("Start");
-        bool inList = false;
-        if (movedObjectList.Count > 0)
+        for (int y = 0; y < movedObjectList.Count; y++)
         {
-            foreach (movedObjectData movedObjectData in movedObjectList)
+            if (partSelect.multiSelectedObjects[x] == movedObjectList[y].movedObject)
             {
-                Debug.Log(movedObjectData.movedObject);
-                Debug.Log(partSelect.selectedObject);
-                if (movedObjectData.movedObject == partSelect.selectedObject)
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void MovePartPosition(Vector2 screenPosition, float time, Transform hit)
+    {
+        //Move Part 
+        //Save Object and position 
+        if (uiManager.isMultiSelect)
+        {
+            //Multiselect
+            //Save
+            if(movedObjectList.Count > 0)
+            {
+                for (int x = 0; x < partSelect.multiSelectedObjects.Count; x++)
                 {
-                    inList = true;
-                    break;
+                    bool selectedInList = CheckSelectedInList(x);
+                    //Save select data if not in list
+                    if (selectedInList == false)
+                    {
+                        movedObjectData data = new movedObjectData();
+                        data.movedObject = partSelect.multiSelectedObjects[x];
+                        data.movedObjectOriginalPos = partSelect.multiSelectedObjects[x].transform.position;
+                        movedObjectList.Add(data);
+                    }
                 }
             }
-            if(inList == false)
+            else
             {
-                SaveMoveHistory();
-                Debug.Log("saved");
+                foreach(GameObject selectObject in partSelect.multiSelectedObjects)
+                {
+                    movedObjectData data = new movedObjectData();
+                    data.movedObject = selectObject;
+                    data.movedObjectOriginalPos = selectObject.transform.position;
+                    movedObjectList.Add(data);
+                }
             }
+            
+
+            //Move
+            foreach (GameObject selectedObj in partSelect.multiSelectedObjects)
+            {
+                if(selectedObj.transform != hit)
+                {
+                    selectedObj.transform.parent = hit.transform;
+                }
+            }
+
+            float worldZ = mainCamera.WorldToScreenPoint(hit.transform.position).z;
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
+            Vector3 offset = worldPos - hit.transform.position;
+            hit.transform.position += offset;
+            hit.transform.DetachChildren();
         }
         else
         {
-            SaveMoveHistory();
-            Debug.Log("yte");
+            //Save
+            if(movedObjectList.Count > 0)
+            {
+                //Check if select is in list
+                bool inList = true;
+                for(int i = 0; i < movedObjectList.Count; i++)
+                {
+                    if(movedObjectList[i].movedObject == partSelect.selectedObject)
+                    {
+                        inList = true;
+                        break;
+                    }
+                    inList = false;
+                }
+                if(inList == false)
+                {
+                    movedObjectData data = new movedObjectData();
+                    data.movedObject = partSelect.selectedObject;
+                    data.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
+                    movedObjectList.Add(data);
+                }
+            }
+            else
+            {
+                movedObjectData data = new movedObjectData();
+                data.movedObject = partSelect.selectedObject;
+                data.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
+                movedObjectList.Add(data);
+            }
+
+            //Move
+            float worldZ = mainCamera.WorldToScreenPoint(partSelect.selectedObject.transform.position).z;
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
+            Vector3 offset = partSelect.selectedObject.transform.position - worldPos;
+            partSelect.selectedObject.transform.position = worldPos;
         }
-
-        //Move Part
-        float worldZ = mainCamera.WorldToScreenPoint(partSelect.selectedObject.transform.position).z;
-        Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
-        Vector3 offset = partSelect.selectedObject.transform.position - worldPos;
-        partSelect.selectedObject.transform.position = worldPos;
     }
 
-    private void SaveMoveHistory()
-    {
-        movedObjectData objectData = new movedObjectData();
-        objectData.movedObject = partSelect.selectedObject;
-        objectData.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
-        movedObjectList.Add(objectData);
-    }
+
 
     public void UndoMove()
     {
