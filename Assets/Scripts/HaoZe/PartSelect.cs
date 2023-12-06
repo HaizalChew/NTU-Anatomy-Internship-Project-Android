@@ -35,7 +35,6 @@ public class PartSelect : MonoBehaviour
         outlineScript = mainCamera.GetComponent<RenderOutline>();
         outlineSelectedPart = gameObject.GetComponent<OutlineSelectedPart>();
         convertScript = gameObject.GetComponent<SortAndConvertList>();
-        uiManager = gameObject.GetComponent<UiManager>();
     }
 
     private void OnEnable()
@@ -146,7 +145,7 @@ public class PartSelect : MonoBehaviour
         //Raycast to worldPos
         var ray = mainCamera.ScreenPointToRay(screenCoordinates);
         //Check if raycast hit selectable
-        bool hitSelectable = Physics.Raycast(ray, out var hit) && hit.transform.gameObject.layer == LayerMask.NameToLayer("Selectable");
+        bool hitSelectable = Physics.Raycast(ray, out var hit) && hit.transform.gameObject.tag == "Selectable";
         if (hitSelectable)
         {
             //Another raycast to get all hitobject data behind

@@ -15,6 +15,7 @@ public class UiManager : MonoBehaviour
     private RenderOutline renderOutline;
     public InputManager inputManager;
     private PartSelect partSelect;
+    [SerializeField] GameObject scriptManager;
 
     public GameObject[] isolateButtonsList;
     public GameObject isolateBtn;
@@ -33,10 +34,10 @@ public class UiManager : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        isolateScript = gameObject.GetComponent<IsolateSelectionScript>();
-        hideScript = gameObject.GetComponent<HideSelectionScript>();
-        partSelect = gameObject.GetComponent<PartSelect>();
-        outlineSelectedPart = gameObject.GetComponent<OutlineSelectedPart>();
+        isolateScript = scriptManager.GetComponent<IsolateSelectionScript>();
+        hideScript = scriptManager.GetComponent<HideSelectionScript>();
+        partSelect = scriptManager.GetComponent<PartSelect>();
+        outlineSelectedPart = scriptManager.GetComponent<OutlineSelectedPart>();
         renderOutline = mainCamera.GetComponent<RenderOutline>();
         Button button = isolateBtn.GetComponent<Button>();
         button.onClick.AddListener(delegate { HideUiElement(isolateButtonsList,isolateScript.isIsolate); });
@@ -117,6 +118,11 @@ public class UiManager : MonoBehaviour
             }
         }
         return isToggle;
+    }
+
+    public void ToggleSetActive(GameObject gameObject)
+    {
+        gameObject.SetActive(!gameObject.activeSelf);
     }
 
     public void ToggleMultiSelectMode()
