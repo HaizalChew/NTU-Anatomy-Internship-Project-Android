@@ -24,7 +24,7 @@ public class RenderOutline : MonoBehaviour
         {
             foreach (Renderer renderObj in RenderObject)
             {
-                commands.DrawRenderer(renderObj, WriteObject);
+                commands.DrawRenderer(renderObj, WriteObject);  
             }
         }
         //apply everything and clean up in command buffer

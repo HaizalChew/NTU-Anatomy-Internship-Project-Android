@@ -9,6 +9,7 @@ public class MovePart : MonoBehaviour
     private PartSelect partSelect;
     public Camera mainCamera;
     public UiManager uiManager;
+    public HideSelectionScript hideSelectionScript;
     public List<movedObjectData> movedObjectList = new List<movedObjectData>();
 
     [System.Serializable]
@@ -86,6 +87,7 @@ public class MovePart : MonoBehaviour
             //Move
             foreach (GameObject selectedObj in partSelect.multiSelectedObjects)
             {
+                Debug.Log(hit);
                 if(selectedObj.transform != hit)
                 {
                     selectedObj.transform.parent = hit.transform;
@@ -96,7 +98,8 @@ public class MovePart : MonoBehaviour
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
             Vector3 offset = worldPos - hit.transform.position;
             hit.transform.position += offset;
-            hit.transform.DetachChildren();
+            //Unparent child of hit back to model
+            hideSelectionScript.UnparentToMainModel(hit.transform, hideSelectionScript.mainModel.transform);
         }
         else
         {

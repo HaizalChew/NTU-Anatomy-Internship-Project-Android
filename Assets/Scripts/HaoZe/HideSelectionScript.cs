@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
@@ -60,31 +61,26 @@ public class HideSelectionScript : MonoBehaviour
             for(int i = 0; i < selectedObjectList.Count; i++)
             {
                 selectedObjectList[i].gameObject.SetActive(false);
-                clone = Instantiate(selectedObjectList[i].gameObject, historyCell.transform);
-                clone.name = selectedObjectList[i].name;
-                Destroy(selectedObjectList[i].gameObject);
+                selectedObjectList[i].transform.parent = historyCell.transform;
                 uiManagerScript.UpdateHistoryCount();
             }
+            Debug.Log("here?");
             selectedObjectList.Clear();
         }
         //Update Undo Counter
         StartCoroutine(uiManagerScript.UpdateHistoryCount());
         //Update History Panel
+        Debug.Log("here??");
         uiManagerScript.UpdateHistoryPanel();
     }
 
     public void UnhideSelection(bool reset = false)
     {
-        int childCount = historyContainer.transform.childCount;
-        if(childCount != 0)
+        int historyChildCount = historyContainer.transform.childCount;
+        if(historyChildCount != 0)
         {
-            Transform container = historyContainer.transform.GetChild(childCount - 1);
-            foreach (Transform child in container)
-            {
-                child.gameObject.SetActive(true);
-                clone = Instantiate(child.gameObject, mainModel.transform);
-                clone.name = child.name;
-            }
+            Transform container = historyContainer.transform.GetChild(historyChildCount - 1);
+            UnparentToMainModel(container, mainModel.transform);
             DestroyImmediate(container.gameObject);
         }
         if (!reset)
@@ -92,6 +88,20 @@ public class HideSelectionScript : MonoBehaviour
             //Update Undo Counter
             StartCoroutine(uiManagerScript.UpdateHistoryCount());
             uiManagerScript.UpdateHistoryPanel();
+        }
+    }
+
+    public void UnparentToMainModel(Transform parent, Transform mainModel)
+    {
+        List<GameObject> list = new List<GameObject>();
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            parent.transform.GetChild(i).gameObject.SetActive(true);
+            list.Add(parent.GetChild(i).gameObject);
+        }
+        foreach (GameObject child in list)
+        {
+            child.transform.parent = mainModel.transform;
         }
     }
 

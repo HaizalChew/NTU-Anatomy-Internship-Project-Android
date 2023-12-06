@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEditor.Rendering;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class UiManager : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public class UiManager : MonoBehaviour
     public bool isMultiSelect;
     public GameObject testBtn;
 
+    public Button undoPanelBtn;
+    public GameObject UndoPanelPortView;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -41,18 +45,21 @@ public class UiManager : MonoBehaviour
         renderOutline = mainCamera.GetComponent<RenderOutline>();
         Button button = isolateBtn.GetComponent<Button>();
         button.onClick.AddListener(delegate { HideUiElement(isolateButtonsList,isolateScript.isIsolate); });
+
+        undoPanelBtn.onClick.AddListener(delegate { OnButtonHideUI(historyContainerPanel); });
     }
 
     public void UpdateHistoryPanel()
     {
-        if(undoHistoryPanel.transform.childCount > 0)
+        Debug.Log("here???");
+        if (undoHistoryPanel.transform.childCount > 0)
         {
             foreach(Transform child in undoHistoryPanel.transform)
             {
                 Destroy(child.gameObject);
             }
         }
-
+        Debug.Log("here????");
         foreach(Transform child in hideScript.historyContainer.transform)
         {
             GameObject clone = Instantiate(testBtn, undoHistoryPanel.transform);
@@ -100,6 +107,26 @@ public class UiManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         int undoCounter = hideScript.GetUndoCounter();
         undoText.text = "Undo [" + undoCounter + "]";
+        undoPanelBtn.GetComponentInChildren<TextMeshProUGUI>().text = "UndoHistory [" + undoCounter + "]";
+        if (undoCounter < 5)
+        {
+            UndoPanelPortView.GetComponent<RectTransform>().sizeDelta = new Vector2(248, (100 * undoCounter));
+            Debug.Log("change");
+        }
+    }
+    public void OnButtonHideUI(GameObject obj)
+    {
+        Debug.Log(obj.activeSelf);
+       if(obj.activeSelf)
+        {
+            Debug.Log(obj);
+            obj.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log(obj);
+            obj.gameObject.SetActive(true);
+        }
     }
     public bool HideUiElement(GameObject[] uiElements, bool isToggle)
     {
