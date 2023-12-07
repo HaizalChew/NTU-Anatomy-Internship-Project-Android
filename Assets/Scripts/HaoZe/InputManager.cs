@@ -14,6 +14,9 @@ public class InputManager : MonoBehaviour
     public delegate void PerformHoldEvent(Vector2 position, float time, Transform hit);
     public event PerformHoldEvent OnPerformHold;
 
+    public delegate void CheckPositionChanged();
+    public event CheckPositionChanged checkPositionChanged;
+
     private TouchControls touchControls;
 
     public bool isMoveSelected;
@@ -82,12 +85,10 @@ public class InputManager : MonoBehaviour
                         {
                             if(Physics.Raycast(ray,out hit))
                             {
-                                Debug.Log("Sent");
                                 foreach (GameObject selectedObj in partSelect.multiSelectedObjects)
                                 {
                                     if(selectedObj == hit.transform.gameObject)
                                     {
-                                        Debug.Log("hit");
                                         transformHit = hit.transform;
                                         isMoveSelected = true;
                                         break;
@@ -127,6 +128,9 @@ public class InputManager : MonoBehaviour
                     break;
                 case UnityEngine.InputSystem.TouchPhase.Ended:
                     camControls.enabled = true;
+                    Debug.Log("end");
+                    //Check if posiiton different from last time if yes save history
+                    checkPositionChanged();
                     if (touch.time > touch.startTime + 0.5)
                     {
                         //Perform hold 

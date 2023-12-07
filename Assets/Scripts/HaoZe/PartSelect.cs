@@ -50,7 +50,6 @@ public class PartSelect : MonoBehaviour
 
     public void ToggleSelectPart(Vector2 screenPosition, float time)
     {
-        Debug.Log("SELECT");
         //Assign currentSelectedObject for checking later
         if (selectedObject != null)
         {
@@ -59,7 +58,6 @@ public class PartSelect : MonoBehaviour
         TouchData touchData = GetTouchData(screenPosition);
         if (touchData.isSelectable)
         {
-            Debug.Log("Selecttable");
             //Select Part
             for (int i = 0; i < touchData.hitList.Count; i++)
             {
@@ -85,7 +83,6 @@ public class PartSelect : MonoBehaviour
                 currentSelectedObject = null;
             }
         }
-        Debug.Log("Did not select");
             
         //Display select text
 

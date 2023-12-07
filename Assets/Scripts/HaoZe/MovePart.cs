@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +12,14 @@ public class MovePart : MonoBehaviour
     public Camera mainCamera;
     public UiManager uiManager;
     public HideSelectionScript hideSelectionScript;
-    public List<movedObjectData> movedObjectList = new List<movedObjectData>();
+    //public List<movedObjectData> movedObjectList = new List<movedObjectData>();
+
+    [SerializeField]
+    public List<List<movedObjectData>> movedObjectList = new List<List<movedObjectData>>();
+
+    public delegate void SaveMoveHistory(List<movedObjectData> movedObjectContainer);
+    public static SaveMoveHistory saveMoveHistory;
+
 
     [System.Serializable]
     public struct movedObjectData
@@ -22,12 +31,13 @@ public class MovePart : MonoBehaviour
 
     private void Awake()
     {
-        partSelect = gameObject.GetComponent<PartSelect>(); 
+        partSelect = gameObject.GetComponent<PartSelect>();
     }
 
     private void OnEnable()
     {
         inputManager.OnPerformHold += MovePartPosition;
+        inputManager.checkPositionChanged += SaveMove;
     }
 
     private void OnDisable()
@@ -39,11 +49,16 @@ public class MovePart : MonoBehaviour
     // y = history
     private bool CheckSelectedInList(int x)
     {
+        //Loop list
         for (int y = 0; y < movedObjectList.Count; y++)
         {
-            if (partSelect.multiSelectedObjects[x] == movedObjectList[y].movedObject)
+            //Loop container
+            foreach(movedObjectData container in movedObjectList[y])
             {
-                return true;
+                if (partSelect.multiSelectedObjects[x] == container.movedObject)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -59,6 +74,7 @@ public class MovePart : MonoBehaviour
             //Save
             if(movedObjectList.Count > 0)
             {
+                List<movedObjectData> movedObjectContainer = new List<movedObjectData>();
                 for (int x = 0; x < partSelect.multiSelectedObjects.Count; x++)
                 {
                     bool selectedInList = CheckSelectedInList(x);
@@ -68,26 +84,34 @@ public class MovePart : MonoBehaviour
                         movedObjectData data = new movedObjectData();
                         data.movedObject = partSelect.multiSelectedObjects[x];
                         data.movedObjectOriginalPos = partSelect.multiSelectedObjects[x].transform.position;
-                        movedObjectList.Add(data);
+
+                        movedObjectContainer.Add(data);
                     }
+                }
+                if (movedObjectContainer.Count > 0)
+                {
+                    movedObjectList.Add(movedObjectContainer);
+                    saveMoveHistory(movedObjectContainer);
                 }
             }
             else
             {
+                List<movedObjectData> movedObjectContainer = new List<movedObjectData>();
                 foreach(GameObject selectObject in partSelect.multiSelectedObjects)
                 {
                     movedObjectData data = new movedObjectData();
                     data.movedObject = selectObject;
                     data.movedObjectOriginalPos = selectObject.transform.position;
-                    movedObjectList.Add(data);
+                    movedObjectContainer.Add(data);
                 }
+                movedObjectList.Add(movedObjectContainer);
+                saveMoveHistory(movedObjectContainer);
             }
             
 
             //Move
             foreach (GameObject selectedObj in partSelect.multiSelectedObjects)
             {
-                Debug.Log(hit);
                 if(selectedObj.transform != hit)
                 {
                     selectedObj.transform.parent = hit.transform;
@@ -104,33 +128,44 @@ public class MovePart : MonoBehaviour
         else
         {
             //Save
-            if(movedObjectList.Count > 0)
+            if (movedObjectList.Count > 0)
             {
-                //Check if select is in list
-                bool inList = true;
-                for(int i = 0; i < movedObjectList.Count; i++)
+                bool CheckIfInList()
                 {
-                    if(movedObjectList[i].movedObject == partSelect.selectedObject)
+                    for (int i = 0; i < movedObjectList.Count; i++)
                     {
-                        inList = true;
-                        break;
+                        //LOOP CONTAINERS IN LIST
+                        for (int x = 0; x < movedObjectList[i].Count; x++)
+                        {
+                            if (movedObjectList[i][x].movedObject == partSelect.selectedObject)
+                            {
+                                return true;
+                            }
+                        }
                     }
-                    inList = false;
+                    return false;
                 }
-                if(inList == false)
+                bool inList = CheckIfInList();
+                if (!inList)
                 {
+                    List<movedObjectData> movedObjectContainer = new List<movedObjectData>();
                     movedObjectData data = new movedObjectData();
                     data.movedObject = partSelect.selectedObject;
                     data.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
-                    movedObjectList.Add(data);
+                    movedObjectContainer.Add(data);
+                    saveMoveHistory(movedObjectContainer);
+                    movedObjectList.Add(movedObjectContainer);
                 }
             }
             else
             {
+                List<movedObjectData> movedObjectContainer = new List<movedObjectData>();
                 movedObjectData data = new movedObjectData();
                 data.movedObject = partSelect.selectedObject;
                 data.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
-                movedObjectList.Add(data);
+                movedObjectContainer.Add(data);
+                movedObjectList.Add(movedObjectContainer);
+                saveMoveHistory(movedObjectContainer);
             }
 
             //Move
@@ -141,16 +176,39 @@ public class MovePart : MonoBehaviour
         }
     }
 
-
-
     public void UndoMove()
     {
-        if(movedObjectList.Count > 0)
+        if (movedObjectList.Count > 0)
         {
             int count = movedObjectList.Count - 1;
-            movedObjectList[count].movedObject.transform.position = movedObjectList[count].movedObjectOriginalPos;
+            //Get Data from Last Container of list
+            foreach(movedObjectData data in movedObjectList[count])
+            {
+                data.movedObject.transform.position = data.movedObjectOriginalPos;
+            }
+            //Remove last Container when done
             movedObjectList.Remove(movedObjectList[count]);
         }
+    }
+
+    public void UndoAllMove()
+    {
+        if (movedObjectList.Count > 0)
+        {
+            for(int i = 0; i < movedObjectList.Count; i++)
+            {
+               for(int x = 0; x < movedObjectList[i].Count; x++)
+                {
+                    movedObjectList[i][x].movedObject.transform.position = movedObjectList[i][x].movedObjectOriginalPos;
+                }
+            }
+            movedObjectList.Clear();
+        }
+    }
+
+    public void SaveMove()
+    {
+        
     }
 
     // Start is called before the first frame update
