@@ -6,13 +6,24 @@ using UnityEngine.Experimental.Rendering.Universal;
 
 public class HideSelectionScript : MonoBehaviour
 {
+    // Singleton references
+    [Header("Singleton")]
+    [SerializeField] UiManager uiManagerScript;
+    // ====================================== //
+
+    // Script References to Self
     private Camera mainCamera;
-    public GameObject mainModel;
-    public GameObject historyContainer;
     private GameObject historyCell;
-    private UiManager uiManagerScript;
     private PartSelect partSelect;
     private RenderOutline renderOutline;
+    // ====================================== //
+
+
+    [Header("Others")]
+    public GameObject mainModel;
+    public GameObject historyContainer;
+    // ====================================== //
+
 
     private GameObject clone;
     //List<Renderer> renderObjectList = new List<Renderer>();
@@ -20,7 +31,6 @@ public class HideSelectionScript : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        uiManagerScript = gameObject.GetComponent<UiManager>();
         renderOutline = mainCamera.GetComponent<RenderOutline>();
         partSelect = gameObject.GetComponent<PartSelect>();
     }

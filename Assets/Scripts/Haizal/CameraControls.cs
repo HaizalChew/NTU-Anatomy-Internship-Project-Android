@@ -13,7 +13,7 @@ public class CameraControls : MonoBehaviour
 
     [SerializeField] Transform focus;
     [SerializeField] Transform orientation;
-    [SerializeField, Range(0.5f, 3f)] float distance = 3f;
+    [SerializeField, Range(0.1f, 3f)] float distance = 3f;
     [SerializeField, Min(0f)] float focusRadius = 1f;
     [SerializeField, Range(0f, 1f)] float focusCentering = 0.5f;
 
@@ -222,7 +222,7 @@ public class CameraControls : MonoBehaviour
             distance += zoomSpeed * Mathf.Abs(input);
         }
 
-        distance = Mathf.Clamp(distance, .5f, 3f);
+        distance = Mathf.Clamp(distance, .1f, 3f);
     }
 
     // This will control camera panning

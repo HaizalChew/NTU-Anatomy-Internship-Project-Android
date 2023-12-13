@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class IsolateSelectionScript : MonoBehaviour
 {
+    [Header("Singleton")]
+    [SerializeField] UiManager uiManager;
+
     public GameObject mainModel;
 
     private Camera mainCamera;
     private PartSelect partSelect;
-    private UiManager uiManager;
+  
 
     public bool isIsolate;
     // Start is called before the first frame update
@@ -15,13 +18,13 @@ public class IsolateSelectionScript : MonoBehaviour
     {
         mainCamera = Camera.main;
         partSelect = gameObject.GetComponent<PartSelect>();
-        uiManager = gameObject.GetComponent<UiManager>();
     }
 
     public void IsolateSelection()
     {
         //Get MultiSelect Mode 
         bool isMultiSelect = uiManager.isMultiSelect;
+
         //Check if already isolated 
         if (isIsolate)
         {
@@ -29,7 +32,11 @@ public class IsolateSelectionScript : MonoBehaviour
             isIsolate = !isIsolate;
             foreach (Transform child in mainModel.transform)
             {
-                child.gameObject.SetActive(!isIsolate);
+                foreach (Transform bodyPart in child)
+                {
+                    bodyPart.gameObject.SetActive(!isIsolate);
+                }
+                
             }
             uiManager.isolateText.text = "Isolate";
         }
@@ -44,7 +51,10 @@ public class IsolateSelectionScript : MonoBehaviour
                 isIsolate = !isIsolate;
                 foreach (Transform child in mainModel.transform)
                 {
-                    child.gameObject.SetActive(!isIsolate);
+                    foreach (Transform bodyPart in child)
+                    {
+                        bodyPart.gameObject.SetActive(!isIsolate);
+                    }
                 }
                 //Get selected objects and set active
                 Renderer[] selectedArray = CreateSelectionArray(isMultiSelect);

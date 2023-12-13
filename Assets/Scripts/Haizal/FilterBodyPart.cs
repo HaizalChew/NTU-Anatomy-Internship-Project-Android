@@ -6,19 +6,19 @@ using TMPro;
 
 public class FilterBodyPart : MonoBehaviour
 {
-    public Transform parentModel;
-    public Transform partListParent;
+    [SerializeField] Transform parentModel;
+    [SerializeField] Transform partListParent;
     [SerializeField] GameObject filterListPrefab;
     [SerializeField] GameObject[] uiElements;
     [SerializeField] TMP_Text warningMessage;
 
-    struct FilterStruct
+    public struct FilterStruct
     {
         public Transform refrencedObj;
         public StrictButtonExtension buttonToggle;
     }
 
-    List<FilterStruct> filters = new List<FilterStruct>();
+    public List<FilterStruct> filters = new List<FilterStruct>();
 
     private void Awake()
     {
@@ -77,13 +77,29 @@ public class FilterBodyPart : MonoBehaviour
         
     }
 
-    bool CheckIfAllIsSelected()
+    public bool CheckIfAllIsSelected()
     {
         bool currentBoolIsSetToTrue = true;
 
         foreach (FilterStruct filterStruct in filters)
         {
             if (!filterStruct.buttonToggle.isOn)
+            {
+                currentBoolIsSetToTrue = false;
+                break;
+            }
+        }
+
+        return currentBoolIsSetToTrue;
+    }
+
+    public bool CheckIfNoneIsSelected()
+    {
+        bool currentBoolIsSetToTrue = true;
+
+        foreach (FilterStruct filterStruct in filters)
+        {
+            if (filterStruct.buttonToggle.isOn)
             {
                 currentBoolIsSetToTrue = false;
                 break;

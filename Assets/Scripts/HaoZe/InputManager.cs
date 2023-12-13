@@ -30,6 +30,11 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+        
        touchControls = new TouchControls();
     }
 
@@ -55,16 +60,6 @@ public class InputManager : MonoBehaviour
         //touchControls.Touch.TouchHold.canceled+= ctx => PerformSelect(ctx);
     }
 
-    private void StartTouch(InputAction.CallbackContext context)
-    {
-
-
-    }
-
-    private void EndTouch(InputAction.CallbackContext context)
-    {
-
-    }
 
     // Update is called once per frame
     void Update()

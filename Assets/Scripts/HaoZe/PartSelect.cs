@@ -83,10 +83,6 @@ public class PartSelect : MonoBehaviour
                 currentSelectedObject = null;
             }
         }
-            
-        //Display select text
-
-        uiManager.DisplaySelectName(uiManager.isMultiSelect);
     }
 
     public void ToggleMultiSelect(Vector2 screenPosition, float time)
@@ -133,8 +129,6 @@ public class PartSelect : MonoBehaviour
                 multiSelectedObjects.Add(chosenObject);
             }
         }
-
-        uiManager.DisplaySelectName(uiManager.isMultiSelect);
     }
 
     private TouchData GetTouchData(Vector2 screenPosition)

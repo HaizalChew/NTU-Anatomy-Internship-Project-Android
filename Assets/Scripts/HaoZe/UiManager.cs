@@ -9,17 +9,59 @@ using System.Collections.Generic;
 
 public class UiManager : MonoBehaviour
 {
-    private Camera mainCamera;
+    // GONNA CLEAN UP & REFINE SOME STUFF - Haizal
+
+    // Singleton references
+    [Header("Singleton")]
+    [SerializeField] GameObject scriptManager; // Contains all other scripts
+    [SerializeField] InputManager inputManager; // Input controls
+    // ====================================== //
+
+
+    // Script references to ScriptManager
     private IsolateSelectionScript isolateScript;
     private HideSelectionScript hideScript;
     private OutlineSelectedPart outlineSelectedPart;
-    private RenderOutline renderOutline;
-    public InputManager inputManager;
     private PartSelect partSelect;
-    [SerializeField] GameObject scriptManager;
+    private MovePart movePart;
+    // ====================================== //
 
+
+    // Script references to Camera
+    private Camera mainCamera;
+    private RenderOutline renderOutline;
+    private CameraControls cameraControls;
+    // ====================================== //
+
+
+    // Script references to Self
+    private Animator animator;
+    // ====================================== //
+
+
+    // Main Panel references
+    [Header("Main Panel")]
+    [SerializeField] Button undoBtn;
+    [SerializeField] Button resetAllBtn;
+    [SerializeField] Button hideBtn;
+    [SerializeField] Button isolateBtn;
+    [SerializeField] Button multiSelectBtn;
+    [SerializeField] Button centerBtn;
+    // ====================================== //
+
+
+    //Advanced Panel references
+    [Header("Advanced Panel")]
+    [SerializeField] Button clearSelectionBtn;
+    [SerializeField] Button undoMoveBtn;
+    [SerializeField] Button undoAllMoveBtn;
+    // ====================================== //
+
+
+    // Other references
+    [Header("Others")]
     public GameObject[] isolateButtonsList;
-    public GameObject isolateBtn;
+    
     public TextMeshProUGUI undoText;
     public TextMeshProUGUI selectText;
     public TextMeshProUGUI isolateText;
@@ -32,21 +74,36 @@ public class UiManager : MonoBehaviour
     public bool isMultiSelect;
     public GameObject testBtn;
 
-    public Button undoPanelBtn;
-    public GameObject UndoPanelPortView;
+    public TMP_Text undoPanel;
+    public GameObject multiSelectActiveIndicator;
+    // ====================================== //
 
     private void Awake()
     {
+        // Initialize References
         mainCamera = Camera.main;
         isolateScript = scriptManager.GetComponent<IsolateSelectionScript>();
         hideScript = scriptManager.GetComponent<HideSelectionScript>();
         partSelect = scriptManager.GetComponent<PartSelect>();
         outlineSelectedPart = scriptManager.GetComponent<OutlineSelectedPart>();
+        movePart = scriptManager.GetComponent<MovePart>();
         renderOutline = mainCamera.GetComponent<RenderOutline>();
-        Button button = isolateBtn.GetComponent<Button>();
-        button.onClick.AddListener(delegate { HideUiElement(isolateButtonsList,isolateScript.isIsolate); });
+        cameraControls = mainCamera.GetComponent<CameraControls>();
+        animator = GetComponent<Animator>();
 
-        undoPanelBtn.onClick.AddListener(delegate { OnButtonHideUI(historyContainerPanel); });
+
+        // Initialize Main Panel buttons
+        undoBtn.onClick.AddListener(() => hideScript.UnhideSelection());
+        resetAllBtn.onClick.AddListener(() => hideScript.ResetUnHide());
+        hideBtn.onClick.AddListener(() => hideScript.HideSelection());
+        isolateBtn.onClick.AddListener(() => isolateScript.IsolateSelection());
+        isolateBtn.onClick.AddListener(() => HideUiElement(isolateButtonsList,isolateScript.isIsolate));
+        multiSelectBtn.onClick.AddListener(() => ToggleMultiSelectMode());
+        centerBtn.onClick.AddListener(() => cameraControls.ActivateRecenteringOnButton());
+
+        // Initialize Advanced Panel buttons
+        undoMoveBtn.onClick.AddListener(() => movePart.UndoMove());
+        undoAllMoveBtn.onClick.AddListener(() => movePart.UndoAllMove());
     }
 
     public void UpdateHistoryPanel()
@@ -75,44 +132,12 @@ public class UiManager : MonoBehaviour
     }
    
 
-    public void DisplaySelectName(bool isMultiSelect)
-    {
-        if(isMultiSelect)
-        {
-            int count = partSelect.multiSelectedObjects.Count;
-            if(count > 0)
-            {
-                selectText.text = partSelect.multiSelectedObjects[count-1].name;
-            }
-            else
-            {
-                selectText.text = null;
-            }
-        }
-        else
-        {
-            if (partSelect.selectedObject != null)
-            {
-                selectText.text = partSelect.selectedObject.name;
-            }
-            else
-            {
-                selectText.text = null;
-            }
-        }
-    }
-
     public IEnumerator UpdateHistoryCount()
     {
         yield return new WaitForEndOfFrame();
         int undoCounter = hideScript.GetUndoCounter();
         undoText.text = "Undo [" + undoCounter + "]";
-        undoPanelBtn.GetComponentInChildren<TextMeshProUGUI>().text = "UndoHistory [" + undoCounter + "]";
-        if (undoCounter < 5)
-        {
-            UndoPanelPortView.GetComponent<RectTransform>().sizeDelta = new Vector2(248, (100 * undoCounter));
-            Debug.Log("change");
-        }
+        undoPanel.text = "Undo History [" + undoCounter + "]";
     }
     public void OnButtonHideUI(GameObject obj)
     {
@@ -156,6 +181,9 @@ public class UiManager : MonoBehaviour
     {
         isMultiSelect = !isMultiSelect;
         renderOutline.RenderObject.Clear();
+
+        multiSelectActiveIndicator.SetActive(isMultiSelect);
+
         if (isMultiSelect)
         {
             inputManager.OnStartTouch -= partSelect.ToggleSelectPart;
@@ -177,6 +205,18 @@ public class UiManager : MonoBehaviour
 
             //Clear selections
             partSelect.multiSelectedObjects.Clear();
+        }
+    }
+
+    public void ToggleAnimBool(string parameterName)
+    {
+        try
+        {
+            animator.SetBool(parameterName, !animator.GetBool(parameterName));
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
         }
     }
 }
