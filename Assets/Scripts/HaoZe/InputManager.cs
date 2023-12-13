@@ -28,6 +28,8 @@ public class InputManager : MonoBehaviour
 
     private Transform transformHit;
 
+    public Vector3 startPos;
+
     private void Awake()
     {
        touchControls = new TouchControls();
@@ -74,8 +76,6 @@ public class InputManager : MonoBehaviour
             switch (touch.phase)
             {
                 case UnityEngine.InputSystem.TouchPhase.Began:
-                    //if move mode is true
-                    //Get object position 
                     Ray ray = mainCamera.ScreenPointToRay(touchControls.Touch.TouchPosition.ReadValue<Vector2>());
                     RaycastHit hit;
                     isMoveSelected = false;
@@ -90,6 +90,9 @@ public class InputManager : MonoBehaviour
                                     if(selectedObj == hit.transform.gameObject)
                                     {
                                         transformHit = hit.transform;
+
+                                        //Get Starting Position
+                                        startPos = transformHit.position;
                                         isMoveSelected = true;
                                         break;
                                     }
@@ -129,12 +132,12 @@ public class InputManager : MonoBehaviour
                 case UnityEngine.InputSystem.TouchPhase.Ended:
                     camControls.enabled = true;
                     Debug.Log("end");
-                    //Check if posiiton different from last time if yes save history
-                    checkPositionChanged();
-                    if (touch.time > touch.startTime + 0.5)
+                    //Check if posiiton different from last time if yes save histor
+                    if (touch.time > touch.startTime + 0.5 && isMoveSelected == true)
                     {
                         //Perform hold 
-                        
+                        checkPositionChanged();
+
                     }
                     else
                     {

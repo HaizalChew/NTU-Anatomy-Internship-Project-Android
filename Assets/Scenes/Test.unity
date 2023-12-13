@@ -3260,6 +3260,7 @@ GameObject:
   - component: {fileID: 1354868552}
   - component: {fileID: 1354868553}
   - component: {fileID: 1354868554}
+  - component: {fileID: 1354868555}
   m_Layer: 0
   m_Name: ScriptManager
   m_TagString: Untagged
@@ -3399,7 +3400,30 @@ MonoBehaviour:
   mainCamera: {fileID: 750308357}
   uiManager: {fileID: 1354868551}
   hideSelectionScript: {fileID: 1354868549}
-  movedObjectList: []
+  saveHistory: {fileID: 1354868555}
+  movedObjects: []
+  hitCurrentPosition: {x: 0, y: 0, z: 0}
+  originalPositions: []
+--- !u!114 &1354868555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354868543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58e8b76a73389884cbe7d62c2a8a6baa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  historyDataList: []
+  holdHideData:
+    hideContainer: {fileID: 0}
+  holdMoveData:
+    movedObjs: []
+    hitTransform: {fileID: 0}
+    currentPos: {x: 0, y: 0, z: 0}
+    prevPos: {x: 0, y: 0, z: 0}
 --- !u!1 &1422654049
 GameObject:
   m_ObjectHideFlags: 0
@@ -4111,6 +4135,7 @@ MonoBehaviour:
   partSelect: {fileID: 1354868552}
   camControls: {fileID: 750308351}
   uiManager: {fileID: 1354868551}
+  startPos: {x: 0, y: 0, z: 0}
 --- !u!4 &2075240252
 Transform:
   m_ObjectHideFlags: 0
@@ -4209,8 +4234,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1354868554}
-        m_TargetAssemblyTypeName: MovePart, Assembly-CSharp
+      - m_Target: {fileID: 1354868555}
+        m_TargetAssemblyTypeName: SaveHistory, Assembly-CSharp
         m_MethodName: UndoMove
         m_Mode: 1
         m_Arguments:
