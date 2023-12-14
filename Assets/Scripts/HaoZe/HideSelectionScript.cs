@@ -64,9 +64,8 @@ public class HideSelectionScript : MonoBehaviour
         //Create history cell
         if (selectedObjectList.Count > 0)
         {
-            Debug.Log("creating");
             int count = historyContainer.transform.childCount + 1;
-            historyCell = new GameObject("Undo " + count);
+            historyCell = new GameObject("UnHide " + count);
             historyCell.transform.parent = historyContainer.transform;
             for(int i = 0; i < selectedObjectList.Count; i++)
             {
@@ -74,13 +73,11 @@ public class HideSelectionScript : MonoBehaviour
                 selectedObjectList[i].transform.parent = historyCell.transform;
                 uiManagerScript.UpdateHistoryCount();
             }
-            Debug.Log("here?");
             selectedObjectList.Clear();
         }
         //Update Undo Counter
         StartCoroutine(uiManagerScript.UpdateHistoryCount());
         //Update History Panel
-        Debug.Log("here??");
         uiManagerScript.UpdateHistoryPanel();
     }
 

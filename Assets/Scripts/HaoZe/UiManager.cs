@@ -41,7 +41,7 @@ public class UiManager : MonoBehaviour
 
     // Main Panel references
     [Header("Main Panel")]
-    [SerializeField] Button undoBtn;
+    [SerializeField] Button unHideBtn;
     [SerializeField] Button resetAllBtn;
     [SerializeField] Button hideBtn;
     [SerializeField] Button isolateBtn;
@@ -62,7 +62,7 @@ public class UiManager : MonoBehaviour
     [Header("Others")]
     public GameObject[] isolateButtonsList;
     
-    public TextMeshProUGUI undoText;
+    public TextMeshProUGUI unHideText;
     public TextMeshProUGUI selectText;
     public TextMeshProUGUI isolateText;
 
@@ -74,7 +74,7 @@ public class UiManager : MonoBehaviour
     public bool isMultiSelect;
     public GameObject testBtn;
 
-    public TMP_Text undoPanel;
+    public TMP_Text unHidePanel;
     public GameObject multiSelectActiveIndicator;
     // ====================================== //
 
@@ -93,7 +93,7 @@ public class UiManager : MonoBehaviour
 
 
         // Initialize Main Panel buttons
-        undoBtn.onClick.AddListener(() => hideScript.UnhideSelection());
+        unHideBtn.onClick.AddListener(() => hideScript.UnhideSelection());
         resetAllBtn.onClick.AddListener(() => hideScript.ResetUnHide());
         hideBtn.onClick.AddListener(() => hideScript.HideSelection());
         isolateBtn.onClick.AddListener(() => isolateScript.IsolateSelection());
@@ -109,7 +109,6 @@ public class UiManager : MonoBehaviour
 
     public void UpdateHistoryPanel()
     {
-        Debug.Log("here???");
         if (undoHistoryPanel.transform.childCount > 0)
         {
             foreach(Transform child in undoHistoryPanel.transform)
@@ -117,7 +116,6 @@ public class UiManager : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
-        Debug.Log("here????");
         foreach(Transform child in hideScript.historyContainer.transform)
         {
             GameObject clone = Instantiate(testBtn, undoHistoryPanel.transform);
@@ -137,8 +135,8 @@ public class UiManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         int undoCounter = hideScript.GetUndoCounter();
-        undoText.text = "Undo [" + undoCounter + "]";
-        undoPanel.text = "Undo History [" + undoCounter + "]";
+        unHideText.text = "UnHide [" + undoCounter + "]";
+        unHidePanel.text = "UnHide History [" + undoCounter + "]";
     }
     public void OnButtonHideUI(GameObject obj)
     {
