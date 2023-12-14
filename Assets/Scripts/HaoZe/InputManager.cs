@@ -85,7 +85,7 @@ public class InputManager : MonoBehaviour
                                         transformHit = hit.transform;
                                         isMoveSelected = true;
                                         //Get MovedObjs
-                                        ConvertSelectedObjectsToArray(null,partSelect.multiSelectedObjects);
+                                        movedObjects = ConvertSelectedObjectsToArray(null,partSelect.multiSelectedObjects);
                                         //Get originPos
                                         originPos = hit.transform.position;
                                         break;
@@ -108,7 +108,7 @@ public class InputManager : MonoBehaviour
                                 {
                                     transformHit = hit.transform;
                                     isMoveSelected = true;
-                                    ConvertSelectedObjectsToArray(partSelect.selectedObject);
+                                    movedObjects = ConvertSelectedObjectsToArray(partSelect.selectedObject);
                                     originPos = hit.transform.position;
                                 }
                                 else
@@ -157,13 +157,13 @@ public class InputManager : MonoBehaviour
         CommandInvoker.ExecuteSave(command);
     }
 
-    public void ConvertSelectedObjectsToArray(GameObject obj = null, List<GameObject> objList = null)
+    public GameObject[] ConvertSelectedObjectsToArray(GameObject obj = null, List<GameObject> objList = null)
     {
         if (obj != null)
         {
             GameObject[] array = new GameObject[1];
             array[0] = obj;
-            movedObjects = array;
+            return array;
         }
         if (objList != null)
         {
@@ -172,7 +172,8 @@ public class InputManager : MonoBehaviour
             {
                 array[i] = objList[i];
             }
-            movedObjects = array;
+            return array;
         }
+        return null;
     }
 }

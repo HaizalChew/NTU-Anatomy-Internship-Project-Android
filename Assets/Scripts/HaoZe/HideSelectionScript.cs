@@ -35,66 +35,19 @@ public class HideSelectionScript : MonoBehaviour
         partSelect = gameObject.GetComponent<PartSelect>();
     }
     
-    public void HideSelection()
+    public void HideSelection(GameObject[] hideObjects)
     {
-        //Check if got selection
-        bool isMultiSelect = uiManagerScript.isMultiSelect;
-        PartSelect.SelectionState state = partSelect.IsSelectionNull();
-        if (isMultiSelect)
+        foreach(GameObject objects in hideObjects)
         {
-            if (state.multiSelect == false)
-            {
-                if (partSelect.multiSelectedObjects.Count > 0)
-                {
-                    selectedObjectList = partSelect.multiSelectedObjects;
-                    renderOutline.RenderObject.Clear();
-                }
-            }
+            objects.SetActive(false);
         }
-        else
-        {
-            if (state.singleSelect == false)
-            {
-                selectedObjectList.Add(partSelect.selectedObject);
-                partSelect.selectedObject = null;
-                renderOutline.RenderObject.Clear();
-            }
-        }
-
-        //Create history cell
-        if (selectedObjectList.Count > 0)
-        {
-            int count = historyContainer.transform.childCount + 1;
-            historyCell = new GameObject("UnHide " + count);
-            historyCell.transform.parent = historyContainer.transform;
-            for(int i = 0; i < selectedObjectList.Count; i++)
-            {
-                selectedObjectList[i].gameObject.SetActive(false);
-                selectedObjectList[i].transform.parent = historyCell.transform;
-                uiManagerScript.UpdateHistoryCount();
-            }
-            selectedObjectList.Clear();
-        }
-        //Update Undo Counter
-        StartCoroutine(uiManagerScript.UpdateHistoryCount());
-        //Update History Panel
-        uiManagerScript.UpdateHistoryPanel();
     }
 
-    public void UnhideSelection(bool reset = false)
+    public void UnhideSelection(GameObject[] hideObjects)
     {
-        int historyChildCount = historyContainer.transform.childCount;
-        if(historyChildCount != 0)
+        foreach (GameObject objects in hideObjects)
         {
-            Transform container = historyContainer.transform.GetChild(historyChildCount - 1);
-            UnparentToCorrectStructure(container, mainModel.transform);
-            DestroyImmediate(container.gameObject);
-        }
-        if (!reset)
-        {
-            //Update Undo Counter
-            StartCoroutine(uiManagerScript.UpdateHistoryCount());
-            uiManagerScript.UpdateHistoryPanel();
+            objects.SetActive(true);
         }
     }
 
@@ -141,23 +94,23 @@ public class HideSelectionScript : MonoBehaviour
         return undoCounter;
     }
 
-    public void ResetUnHide()
-    {
-        //Check for all history 
-        int childCount = historyContainer.transform.childCount;
-        if(childCount > 0)
-        {
-            for (int i = 0; i < childCount; i++)
-            {
-                Debug.Log(i);
-                UnhideSelection(true);
-                StartCoroutine(WaitForDestroy());
-                continue;
-            }
-        }
-        StartCoroutine(uiManagerScript.UpdateHistoryCount());
-        uiManagerScript.UpdateHistoryPanel();
-    }
+    //public void ResetUnHide()
+    //{
+    //    //Check for all history 
+    //    int childCount = historyContainer.transform.childCount;
+    //    if(childCount > 0)
+    //    {
+    //        for (int i = 0; i < childCount; i++)
+    //        {
+    //            Debug.Log(i);
+    //            UnhideSelection(true);
+    //            StartCoroutine(WaitForDestroy());
+    //            continue;
+    //        }
+    //    }
+    //    StartCoroutine(uiManagerScript.UpdateHistoryCount());
+    //    uiManagerScript.UpdateHistoryPanel();
+    //}
 
     IEnumerator WaitForDestroy()
     {

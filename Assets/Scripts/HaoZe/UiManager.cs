@@ -93,9 +93,9 @@ public class UiManager : MonoBehaviour
 
 
         // Initialize Main Panel buttons
-        unHideBtn.onClick.AddListener(() => hideScript.UnhideSelection());
-        resetAllBtn.onClick.AddListener(() => hideScript.ResetUnHide());
-        hideBtn.onClick.AddListener(() => hideScript.HideSelection());
+        //unHideBtn.onClick.AddListener(() => hideScript.UnhideSelection());
+        //resetAllBtn.onClick.AddListener(() => hideScript.ResetUnHide());
+        hideBtn.onClick.AddListener(() => SendHideCommand());
         isolateBtn.onClick.AddListener(() => isolateScript.IsolateSelection());
         isolateBtn.onClick.AddListener(() => HideUiElement(isolateButtonsList,isolateScript.isIsolate));
         multiSelectBtn.onClick.AddListener(() => ToggleMultiSelectMode());
@@ -105,6 +105,33 @@ public class UiManager : MonoBehaviour
         clearSelectionBtn.onClick.AddListener(() => partSelect.ClearSelection());
         undoMoveBtn.onClick.AddListener(() => CommandInvoker.ExecuteUndo());
         undoAllMoveBtn.onClick.AddListener(() => movePart.UndoAllMove());
+    }
+
+    public void SendHideCommand()
+    {
+        if (isMultiSelect)
+        {
+            if(partSelect.multiSelectedObjects.Count > 0)
+            {
+                GameObject[] array;
+                array = inputManager.ConvertSelectedObjectsToArray(null, partSelect.multiSelectedObjects);
+                hideScript.HideSelection(array);
+                ICommand command = new HideCommand(array, hideScript);
+                CommandInvoker.ExecuteSave(command);
+            }
+        }
+        else
+        {
+            if (partSelect.selectedObject != null)
+            {
+                GameObject[] array;
+                array = inputManager.ConvertSelectedObjectsToArray(partSelect.selectedObject);
+                hideScript.HideSelection(array);
+                ICommand command = new HideCommand(array, hideScript);
+                CommandInvoker.ExecuteSave(command);
+            }
+        }
+
     }
 
     public void UpdateHistoryPanel()
