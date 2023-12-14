@@ -103,7 +103,7 @@ public class UiManager : MonoBehaviour
 
         // Initialize Advanced Panel buttons
         clearSelectionBtn.onClick.AddListener(() => partSelect.ClearSelection());
-        undoMoveBtn.onClick.AddListener(() => movePart.UndoMove());
+        undoMoveBtn.onClick.AddListener(() => CommandInvoker.ExecuteUndo());
         undoAllMoveBtn.onClick.AddListener(() => movePart.UndoAllMove());
     }
 

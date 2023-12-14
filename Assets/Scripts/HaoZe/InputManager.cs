@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch;
@@ -11,7 +13,7 @@ public class InputManager : MonoBehaviour
     public delegate void EndTouchEvent(Vector2 position, float time);
     public event EndTouchEvent OnEndTouch;
 
-    public delegate void PerformHoldEvent(Vector2 position, float time, Transform hit);
+    public delegate void PerformHoldEvent(Vector3 position, Transform hit);
     public event PerformHoldEvent OnPerformHold;
 
     public delegate void CheckPositionChanged();
@@ -25,8 +27,14 @@ public class InputManager : MonoBehaviour
     public PartSelect partSelect;
     public CameraControls camControls;
     public UiManager uiManager;
+    public MovePart movePart;
 
-    private Transform transformHit;
+    //Move Data to send
+    [Header("MoveCommandData")]
+    public GameObject[] movedObjects;
+    public Transform transformHit;
+    public Vector3 currentPos;
+    public Vector3 originPos;
 
     private void Awake()
     {
@@ -49,17 +57,6 @@ public class InputManager : MonoBehaviour
         touchControls.Disable();
         EnhancedTouch.EnhancedTouchSupport.Disable();
     }
-
-    private void Start()
-    {
-        //touchControls.Touch.TouchPress.performed += ctx => StartTouch(ctx);
-        //touchControls.Touch.TouchPress.canceled += ctx => EndTouch(ctx);
-
-        //touchControls.Touch.TouchHold.performed += ctx => PerformSelect(ctx);
-        //touchControls.Touch.TouchHold.started += ctx => PerformSelect(ctx);
-        //touchControls.Touch.TouchHold.canceled+= ctx => PerformSelect(ctx);
-    }
-
 
     // Update is called once per frame
     void Update()
@@ -84,8 +81,13 @@ public class InputManager : MonoBehaviour
                                 {
                                     if(selectedObj == hit.transform.gameObject)
                                     {
+                                        //Get hit transform
                                         transformHit = hit.transform;
                                         isMoveSelected = true;
+                                        //Get MovedObjs
+                                        ConvertSelectedObjectsToArray(null,partSelect.multiSelectedObjects);
+                                        //Get originPos
+                                        originPos = hit.transform.position;
                                         break;
                                     }
                                     else
@@ -104,7 +106,10 @@ public class InputManager : MonoBehaviour
                             {
                                 if (hit.transform.gameObject == partSelect.selectedObject)
                                 {
+                                    transformHit = hit.transform;
                                     isMoveSelected = true;
+                                    ConvertSelectedObjectsToArray(partSelect.selectedObject);
+                                    originPos = hit.transform.position;
                                 }
                                 else
                                 {
@@ -118,18 +123,24 @@ public class InputManager : MonoBehaviour
                     if(touch.time > touch.startTime + 0.5 && isMoveSelected == true)
                     {
                         camControls.enabled = false;
-                        OnPerformHold(touchControls.Touch.TouchPosition.ReadValue<Vector2>(), (float)touch.startTime, transformHit);
+                        //Get ScreenPos and transform
+                        Vector2 screenPosition = touchControls.Touch.TouchPosition.ReadValue<Vector2>();
+                        float worldZ = mainCamera.WorldToScreenPoint(transformHit.transform.position).z;
+                        Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
+                        OnPerformHold(worldPos, transformHit);
+                        currentPos = worldPos;
                     }
                     break;
                 case UnityEngine.InputSystem.TouchPhase.Ended:
                     camControls.enabled = true;
-                    Debug.Log("end");
                     //Check if posiiton different from last time if yes save history
                     checkPositionChanged();
-                    if (touch.time > touch.startTime + 0.5)
+                    if (touch.time > touch.startTime + 0.5 && isMoveSelected == true)
                     {
-                        //Perform hold 
-                        
+                        //Finish Move 
+                        //Save Move Command
+                        SaveMoveCommand();
+
                     }
                     else
                     {
@@ -137,6 +148,31 @@ public class InputManager : MonoBehaviour
                     }
                     break;
             }
+        }
+    }
+
+    public void SaveMoveCommand()
+    {
+        ICommand command = new MoveCommand(originPos, currentPos, movedObjects, transformHit, movePart);
+        CommandInvoker.ExecuteSave(command);
+    }
+
+    public void ConvertSelectedObjectsToArray(GameObject obj = null, List<GameObject> objList = null)
+    {
+        if (obj != null)
+        {
+            GameObject[] array = new GameObject[1];
+            array[0] = obj;
+            movedObjects = array;
+        }
+        if (objList != null)
+        {
+            GameObject[] array = new GameObject[objList.Count];
+            for(int i = 0; i < objList.Count; i++)
+            {
+                array[i] = objList[i];
+            }
+            movedObjects = array;
         }
     }
 }

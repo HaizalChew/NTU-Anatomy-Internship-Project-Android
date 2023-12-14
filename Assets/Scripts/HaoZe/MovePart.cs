@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.XR;
 
 public class MovePart : MonoBehaviour
 {
@@ -36,13 +37,13 @@ public class MovePart : MonoBehaviour
 
     private void OnEnable()
     {
-        inputManager.OnPerformHold += MovePartPosition;
         inputManager.checkPositionChanged += SaveMove;
+        inputManager.OnPerformHold += MovePartPosition;
     }
 
     private void OnDisable()
     {
-        inputManager.OnPerformHold -= MovePartPosition;
+
     }
 
     // x = selected
@@ -64,7 +65,7 @@ public class MovePart : MonoBehaviour
         return false;
     }
 
-    private void MovePartPosition(Vector2 screenPosition, float time, Transform hit)
+    public void MovePartPosition(Vector3 screenPosition, Transform hit)
     {
         //Move Part 
         //Save Object and position 
@@ -118,9 +119,7 @@ public class MovePart : MonoBehaviour
                 }
             }
 
-            float worldZ = mainCamera.WorldToScreenPoint(hit.transform.position).z;
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
-            Vector3 offset = worldPos - hit.transform.position;
+            Vector3 offset = screenPosition - hit.transform.position;
             hit.transform.position += offset;
             //Unparent child of hit back to model
             hideSelectionScript.UnparentToCorrectStructure(hit.transform, hideSelectionScript.mainModel.transform);
@@ -169,26 +168,24 @@ public class MovePart : MonoBehaviour
             }
 
             //Move
-            float worldZ = mainCamera.WorldToScreenPoint(partSelect.selectedObject.transform.position).z;
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
-            Vector3 offset = partSelect.selectedObject.transform.position - worldPos;
-            partSelect.selectedObject.transform.position = worldPos;
+            Vector3 offset = screenPosition - hit.transform.position;
+            hit.transform.position += offset;
+            Debug.Log(hit.transform.position);
         }
     }
 
-    public void UndoMove()
+    public void UndoMove(GameObject[] movedObjects, Transform hit, Vector3 originPos)
     {
-        if (movedObjectList.Count > 0)
+        foreach (var obj in movedObjects)
         {
-            int count = movedObjectList.Count - 1;
-            //Get Data from Last Container of list
-            foreach(movedObjectData data in movedObjectList[count])
+            if (obj.transform != hit)
             {
-                data.movedObject.transform.position = data.movedObjectOriginalPos;
+                obj.transform.parent = hit.transform;
             }
-            //Remove last Container when done
-            movedObjectList.Remove(movedObjectList[count]);
         }
+
+        hit.transform.position = originPos;
+        hideSelectionScript.UnparentToCorrectStructure(hit, hideSelectionScript.mainModel.transform);
     }
 
     public void UndoAllMove()
