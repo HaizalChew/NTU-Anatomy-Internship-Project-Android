@@ -15,7 +15,7 @@ public class UndoFunction : MonoBehaviour
 
     private void OnEnable()
     {
-        MovePart.saveMoveHistory += StoreMoveHistory;
+        //MovePart.saveMoveHistory += StoreMoveHistory;
     }
 
     public void StoreMoveHistory(List<MovePart.movedObjectData> movedObjectContainer)

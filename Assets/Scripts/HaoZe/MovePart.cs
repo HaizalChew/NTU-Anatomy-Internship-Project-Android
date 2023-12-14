@@ -17,8 +17,8 @@ public class MovePart : MonoBehaviour
     [SerializeField]
     public List<List<movedObjectData>> movedObjectList = new List<List<movedObjectData>>();
 
-    public delegate void SaveMoveHistory(List<movedObjectData> movedObjectContainer);
-    public static SaveMoveHistory saveMoveHistory;
+    //public delegate void SaveMoveHistory(List<movedObjectData> movedObjectContainer);
+    //public static SaveMoveHistory saveMoveHistory;
 
 
     [System.Serializable]
@@ -91,7 +91,7 @@ public class MovePart : MonoBehaviour
                 if (movedObjectContainer.Count > 0)
                 {
                     movedObjectList.Add(movedObjectContainer);
-                    saveMoveHistory(movedObjectContainer);
+                    //saveMoveHistory(movedObjectContainer);
                 }
             }
             else
@@ -105,7 +105,7 @@ public class MovePart : MonoBehaviour
                     movedObjectContainer.Add(data);
                 }
                 movedObjectList.Add(movedObjectContainer);
-                saveMoveHistory(movedObjectContainer);
+                //saveMoveHistory(movedObjectContainer);
             }
             
 
@@ -153,7 +153,7 @@ public class MovePart : MonoBehaviour
                     data.movedObject = partSelect.selectedObject;
                     data.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
                     movedObjectContainer.Add(data);
-                    saveMoveHistory(movedObjectContainer);
+                    //saveMoveHistory(movedObjectContainer);
                     movedObjectList.Add(movedObjectContainer);
                 }
             }
@@ -165,7 +165,7 @@ public class MovePart : MonoBehaviour
                 data.movedObjectOriginalPos = partSelect.selectedObject.transform.position;
                 movedObjectContainer.Add(data);
                 movedObjectList.Add(movedObjectContainer);
-                saveMoveHistory(movedObjectContainer);
+                //saveMoveHistory(movedObjectContainer);
             }
 
             //Move
