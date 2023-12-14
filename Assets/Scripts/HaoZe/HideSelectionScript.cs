@@ -90,7 +90,7 @@ public class HideSelectionScript : MonoBehaviour
         if(historyChildCount != 0)
         {
             Transform container = historyContainer.transform.GetChild(historyChildCount - 1);
-            UnparentToMainModel(container, mainModel.transform);
+            UnparentToCorrectStructure(container, mainModel.transform);
             DestroyImmediate(container.gameObject);
         }
         if (!reset)
@@ -101,7 +101,7 @@ public class HideSelectionScript : MonoBehaviour
         }
     }
 
-    public void UnparentToMainModel(Transform parent, Transform mainModel)
+    public void UnparentToCorrectStructure(Transform parent, Transform mainModel)
     {
         List<GameObject> list = new List<GameObject>();
         for (int i = 0; i < parent.childCount; i++)
@@ -111,7 +111,16 @@ public class HideSelectionScript : MonoBehaviour
         }
         foreach (GameObject child in list)
         {
-            child.transform.parent = mainModel.transform;
+            //if child layer == Check main model structure layer
+            foreach(Transform structure in mainModel.transform)
+            {
+                Debug.Log(structure);
+                if(child.layer == structure.gameObject.layer)
+                {
+                    child.transform.parent = structure.transform;
+                    break;
+                }
+            }
         }
     }
 

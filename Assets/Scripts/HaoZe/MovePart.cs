@@ -123,7 +123,7 @@ public class MovePart : MonoBehaviour
             Vector3 offset = worldPos - hit.transform.position;
             hit.transform.position += offset;
             //Unparent child of hit back to model
-            hideSelectionScript.UnparentToMainModel(hit.transform, hideSelectionScript.mainModel.transform);
+            hideSelectionScript.UnparentToCorrectStructure(hit.transform, hideSelectionScript.mainModel.transform);
         }
         else
         {
