@@ -102,6 +102,7 @@ public class UiManager : MonoBehaviour
         centerBtn.onClick.AddListener(() => cameraControls.ActivateRecenteringOnButton());
 
         // Initialize Advanced Panel buttons
+        clearSelectionBtn.onClick.AddListener(() => partSelect.ClearSelection());
         undoMoveBtn.onClick.AddListener(() => movePart.UndoMove());
         undoAllMoveBtn.onClick.AddListener(() => movePart.UndoAllMove());
     }
