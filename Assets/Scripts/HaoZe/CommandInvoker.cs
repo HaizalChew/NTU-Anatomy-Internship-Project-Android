@@ -27,4 +27,14 @@ public class CommandInvoker
     {
         command.Toggle();
     }
+
+    public static void ExecuteReset(UiManager uiManager)
+    {
+        foreach(ICommand command in commandList)
+        {
+            command.Undo();
+        }
+        commandList.Clear();
+        uiManager.UpdateHistoryPanel();
+    }
 }

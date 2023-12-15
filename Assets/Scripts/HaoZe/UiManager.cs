@@ -98,7 +98,7 @@ public class UiManager : MonoBehaviour
 
         // Initialize Main Panel buttons
         //unHideBtn.onClick.AddListener(() => hideScript.UnhideSelection());
-        //resetAllBtn.onClick.AddListener(() => hideScript.ResetUnHide());
+        resetAllBtn.onClick.AddListener(() => CommandInvoker.ExecuteReset(this));
         undoBtn.onClick.AddListener(() => CommandInvoker.ExecuteUndo(this));
         hideBtn.onClick.AddListener(() => SendHideCommand());
         isolateBtn.onClick.AddListener(() => isolateScript.IsolateSelection());
