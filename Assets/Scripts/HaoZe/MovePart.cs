@@ -170,8 +170,33 @@ public class MovePart : MonoBehaviour
             //Move
             Vector3 offset = screenPosition - hit.transform.position;
             hit.transform.position += offset;
-            Debug.Log(hit.transform.position);
         }
+    }
+
+    public void ToggleMove(Transform hit, GameObject[] movedObjects, Vector3 currentPos, Vector3 originPos) 
+    {
+        Debug.Log("Toggle");
+        foreach (var obj in movedObjects)
+        {
+            if (obj.transform != hit)
+            {
+                obj.transform.parent = hit.transform;
+            }
+        }
+
+        if(hit.transform.position == currentPos)
+        {
+            hit.transform.position = originPos;
+            hideSelectionScript.UnparentToCorrectStructure(hit, hideSelectionScript.mainModel.transform);
+            return;
+        }
+        if(hit.transform.position == originPos)
+        {
+            hit.transform.position = currentPos;
+            hideSelectionScript.UnparentToCorrectStructure(hit, hideSelectionScript.mainModel.transform);
+            return;
+        }
+        hideSelectionScript.UnparentToCorrectStructure(hit, hideSelectionScript.mainModel.transform);
     }
 
     public void UndoMove(GameObject[] movedObjects, Transform hit, Vector3 originPos)

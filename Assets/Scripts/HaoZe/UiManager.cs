@@ -41,7 +41,7 @@ public class UiManager : MonoBehaviour
 
     // Main Panel references
     [Header("Main Panel")]
-    [SerializeField] Button unHideBtn;
+    [SerializeField] Button undoBtn;
     [SerializeField] Button resetAllBtn;
     [SerializeField] Button hideBtn;
     [SerializeField] Button isolateBtn;
@@ -76,6 +76,10 @@ public class UiManager : MonoBehaviour
 
     public TMP_Text unHidePanel;
     public GameObject multiSelectActiveIndicator;
+
+    public Stack<ICommand> test;
+
+
     // ====================================== //
 
     private void Awake()
@@ -95,6 +99,7 @@ public class UiManager : MonoBehaviour
         // Initialize Main Panel buttons
         //unHideBtn.onClick.AddListener(() => hideScript.UnhideSelection());
         //resetAllBtn.onClick.AddListener(() => hideScript.ResetUnHide());
+        undoBtn.onClick.AddListener(() => CommandInvoker.ExecuteUndo(this));
         hideBtn.onClick.AddListener(() => SendHideCommand());
         isolateBtn.onClick.AddListener(() => isolateScript.IsolateSelection());
         isolateBtn.onClick.AddListener(() => HideUiElement(isolateButtonsList,isolateScript.isIsolate));
@@ -103,8 +108,8 @@ public class UiManager : MonoBehaviour
 
         // Initialize Advanced Panel buttons
         clearSelectionBtn.onClick.AddListener(() => partSelect.ClearSelection());
-        undoMoveBtn.onClick.AddListener(() => CommandInvoker.ExecuteUndo());
-        undoAllMoveBtn.onClick.AddListener(() => movePart.UndoAllMove());
+        //undoMoveBtn.onClick.AddListener(() => CommandInvoker.ExecuteUndo(this));
+        //undoAllMoveBtn.onClick.AddListener(() => movePart.UndoAllMove());
     }
 
     public void SendHideCommand()
@@ -116,8 +121,10 @@ public class UiManager : MonoBehaviour
                 GameObject[] array;
                 array = inputManager.ConvertSelectedObjectsToArray(null, partSelect.multiSelectedObjects);
                 hideScript.HideSelection(array);
+                partSelect.multiSelectedObjects.Clear();
                 ICommand command = new HideCommand(array, hideScript);
                 CommandInvoker.ExecuteSave(command);
+                UpdateHistoryPanel();
             }
         }
         else
@@ -127,8 +134,10 @@ public class UiManager : MonoBehaviour
                 GameObject[] array;
                 array = inputManager.ConvertSelectedObjectsToArray(partSelect.selectedObject);
                 hideScript.HideSelection(array);
+                partSelect.selectedObject = null;
                 ICommand command = new HideCommand(array, hideScript);
                 CommandInvoker.ExecuteSave(command);
+                UpdateHistoryPanel();
             }
         }
 
@@ -136,28 +145,35 @@ public class UiManager : MonoBehaviour
 
     public void UpdateHistoryPanel()
     {
-        if (undoHistoryPanel.transform.childCount > 0)
+        int i = CommandInvoker.commandList.Count;
+        if(historyContainerPanel.transform.childCount != 0)
         {
-            foreach(Transform child in undoHistoryPanel.transform)
+            foreach(Transform child in historyContainerPanel.transform)
             {
                 Destroy(child.gameObject);
             }
         }
-        foreach(Transform child in hideScript.historyContainer.transform)
+       foreach(ICommand command in CommandInvoker.commandList)
         {
-            GameObject clone = Instantiate(testBtn, undoHistoryPanel.transform);
-            clone.GetComponent<Button>().onClick.AddListener(delegate { hideScript.HistoryShowHide(child.transform); });
-            clone.GetComponentInChildren<TextMeshProUGUI>().text = child.transform.name;
+            if(command is MoveCommand)
+            {
+                Debug.Log("Move");
+                GameObject clone = Instantiate(testBtn, historyContainerPanel.transform);
+                clone.GetComponentInChildren<TextMeshProUGUI>().text = "[" + i + "] Move";
+                clone.GetComponent<Button>().onClick.AddListener(() => CommandInvoker.ExecuteToggle(command));
+            }
+            if(command is HideCommand)
+            {
+                Debug.Log("Hide");
+                GameObject clone = Instantiate(testBtn, historyContainerPanel.transform);
+                clone.GetComponentInChildren<TextMeshProUGUI>().text = "[" + i + "] Hide";
+                clone.GetComponent<Button>().onClick.AddListener(() => CommandInvoker.ExecuteToggle(command));
+            }
+            i--;
         }
-
     }
 
-    public void SayHi()
-    {
-        Debug.Log("yo");
-    }
    
-
     public IEnumerator UpdateHistoryCount()
     {
         yield return new WaitForEndOfFrame();

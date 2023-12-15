@@ -6,4 +6,6 @@ public interface ICommand
 {
 
     void Undo();
+
+    void Toggle();
 }

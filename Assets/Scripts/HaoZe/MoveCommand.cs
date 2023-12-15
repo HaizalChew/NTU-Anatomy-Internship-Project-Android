@@ -38,4 +38,9 @@ public class MoveCommand : ICommand
         hit.transform.position = originPos;
         movePart.UndoMove(movedObjects,hit,originPos);
     }
+
+    public void Toggle()
+    {
+        movePart.ToggleMove(hit, movedObjects, currentPos, originPos);
+    }
 }

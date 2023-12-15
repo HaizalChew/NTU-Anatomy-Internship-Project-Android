@@ -51,6 +51,25 @@ public class HideSelectionScript : MonoBehaviour
         }
     }
 
+    public void ToggleHide(GameObject[] hideObjects)
+    {
+        foreach(GameObject obj in hideObjects)
+        {
+            if(obj.activeSelf)
+            {
+                Debug.Log("off");
+                obj.SetActive(false);
+                continue;
+            }
+            if (!obj.activeSelf)
+            {
+                Debug.Log("on");
+                obj.SetActive(true);
+                continue;
+            }
+        }
+    }
+
     public void UnparentToCorrectStructure(Transform parent, Transform mainModel)
     {
         List<GameObject> list = new List<GameObject>();

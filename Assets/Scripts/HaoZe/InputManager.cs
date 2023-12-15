@@ -155,6 +155,7 @@ public class InputManager : MonoBehaviour
     {
         ICommand command = new MoveCommand(originPos, currentPos, movedObjects, transformHit, movePart);
         CommandInvoker.ExecuteSave(command);
+        uiManager.UpdateHistoryPanel();
     }
 
     public GameObject[] ConvertSelectedObjectsToArray(GameObject obj = null, List<GameObject> objList = null)

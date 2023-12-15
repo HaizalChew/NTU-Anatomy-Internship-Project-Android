@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CommandInvoker
 {
-    private static Stack<ICommand> commandList = new Stack<ICommand>();
+    public static Stack<ICommand> commandList = new Stack<ICommand>();
 
     public static void ExecuteSave(ICommand command)
     {
@@ -13,12 +13,18 @@ public class CommandInvoker
         Debug.Log("push");
     }
 
-    public static void ExecuteUndo()
+    public static void ExecuteUndo(UiManager uiManager)
     {
         if(commandList.Count > 0)
         {
             ICommand command = commandList.Pop();
             command.Undo();
         }
+        uiManager.UpdateHistoryPanel();
+    }
+
+    public static void ExecuteToggle(ICommand command)
+    {
+        command.Toggle();
     }
 }

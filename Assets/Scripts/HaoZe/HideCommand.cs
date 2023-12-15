@@ -19,4 +19,10 @@ public class HideCommand : ICommand
         Debug.Log("Undo Hide");
         hideSelectionScript.UnhideSelection(hideObjects);
     }
+
+    public void Toggle()
+    {
+        Debug.Log("toggle hide");
+        hideSelectionScript.ToggleHide(hideObjects);
+    }
 }
