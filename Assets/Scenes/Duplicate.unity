@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &9241077 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7145405460313127953, guid: b1779e7aefc10454486ae01554c274b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 6173209240123717167}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &234138836 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7655459068089764875, guid: b1779e7aefc10454486ae01554c274b0,
@@ -287,6 +293,11 @@ MonoBehaviour:
   partSelect: {fileID: 1095070226}
   camControls: {fileID: 759252431}
   uiManager: {fileID: 6173209240123717170}
+  movePart: {fileID: 1095070224}
+  movedObjects: []
+  transformHit: {fileID: 0}
+  currentPos: {x: 0, y: 0, z: 0}
+  originPos: {x: 0, y: 0, z: 0}
 --- !u!4 &505929327
 Transform:
   m_ObjectHideFlags: 0
@@ -1052,7 +1063,7 @@ PrefabInstance:
     - target: {fileID: 2019569707348752162, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
       propertyPath: m_Name
-      value: UnHide Button
+      value: Undo Button
       objectReference: {fileID: 0}
     - target: {fileID: 2285294621047077114, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
@@ -1217,7 +1228,7 @@ PrefabInstance:
     - target: {fileID: 4735545110531211096, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
       propertyPath: m_text
-      value: UnHide
+      value: Undo
       objectReference: {fileID: 0}
     - target: {fileID: 4801247156004289703, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
@@ -1294,6 +1305,16 @@ PrefabInstance:
       propertyPath: scriptManager
       value: 
       objectReference: {fileID: 1095070223}
+    - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
+        type: 3}
+      propertyPath: undoHistoryPanel
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
+        type: 3}
+      propertyPath: historyContainerPanel
+      value: 
+      objectReference: {fileID: 9241077}
     - target: {fileID: 7181747432002712623, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1485,7 +1506,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1234370918814765354, guid: b1779e7aefc10454486ae01554c274b0, type: 3}
+    - {fileID: 8197522774664993882, guid: b1779e7aefc10454486ae01554c274b0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8951411876733607333, guid: b1779e7aefc10454486ae01554c274b0,
