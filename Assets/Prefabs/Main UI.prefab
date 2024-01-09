@@ -1352,7 +1352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scriptManager: {fileID: 0}
   inputManager: {fileID: 0}
-  undoBtn: {fileID: 7801104051685724651}
+  unHideBtn: {fileID: 0}
   resetAllBtn: {fileID: 883197970829902511}
   hideBtn: {fileID: 6479600755757827422}
   isolateBtn: {fileID: 7756854213379056981}
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   - {fileID: 2019569707348752162}
   - {fileID: 823922357794690527}
   - {fileID: 7557662993330483595}
-  undoText: {fileID: 4735545110531211096}
+  unHideText: {fileID: 0}
   selectText: {fileID: 0}
   isolateText: {fileID: 5073373544760897395}
   undoHistoryPanel: {fileID: 7145405460313127953}
@@ -1374,7 +1374,7 @@ MonoBehaviour:
   testChild: {fileID: 0}
   isMultiSelect: 0
   testBtn: {fileID: 8290252396077678525, guid: 8b3c7c25d2d52984f83a89db81f78f69, type: 3}
-  undoPanel: {fileID: 7655459068089764875}
+  unHidePanel: {fileID: 0}
   multiSelectActiveIndicator: {fileID: 3956727653539637778}
 --- !u!114 &2285294621047077114
 MonoBehaviour:
@@ -2853,7 +2853,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 140, y: 140}
+  m_CellSize: {x: 130, y: 130}
   m_Spacing: {x: 0, y: 8}
   m_Constraint: 0
   m_ConstraintCount: 2
