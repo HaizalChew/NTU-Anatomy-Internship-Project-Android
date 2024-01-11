@@ -44,7 +44,7 @@ public class QuizCreation : MonoBehaviour
             correctOption = correctOptionInput.text,
         };
 
-        string filePath = "C:/Users/hao yu/Documents/GitHub/NTU-Anatomy-Internship-Project-Android/Assets/Json/question" + questionNo + ".json";
+        string filePath = "Assets/Json/question" + questionNo + ".json";
         string jsonString = JsonUtility.ToJson(newData);
         File.WriteAllText(filePath, jsonString);
         Debug.Log("Created");
