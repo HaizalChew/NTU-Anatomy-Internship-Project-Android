@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/CameraTest.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Duplicate 1.unity
+    path: Assets/Scenes/Neuro3dViewer.unity
     guid: b2be91e0f9d5099498db8bfa995c1e51
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 53f054d5c181720419994b9cab128cd0,
