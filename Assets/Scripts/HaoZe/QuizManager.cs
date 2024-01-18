@@ -8,10 +8,9 @@ using System.IO;
 public class QuizManager : MonoBehaviour
 {
     public GameObject[] quizText;
-    public GameObject quizPanel;
-    public Button quizPanelButton;
-    public bool isPanelActive = false;
+    public TMP_Text questionNumberText;
 
+    private int questionNumber;
     private bool isPressedCorrect = false;
 
     private delegate void correctAnswer();
@@ -22,14 +21,15 @@ public class QuizManager : MonoBehaviour
 
     public void Awake()
     {
-        quizPanelButton.GetComponent<Button>().onClick.AddListener(() => ToggleQuizPanel());
-        quizPanelButton.GetComponent<Button>().onClick.AddListener(() => StartQuiz());
+        //quizPanelButton.GetComponent<Button>().onClick.AddListener(() => ToggleQuizPanel());
+        //quizPanelButton.GetComponent<Button>().onClick.AddListener(() => StartQuiz());
+        StartQuiz();
     }
 
     public void ToggleQuizPanel()
     {
-        isPanelActive = !isPanelActive;
-        quizPanel.SetActive(isPanelActive);
+        //isPanelActive = !isPanelActive;
+        //quizPanel.SetActive(isPanelActive);
     }
 
     public QuestionData ReadJsonQuestion(int questionNum)
@@ -61,7 +61,7 @@ public class QuizManager : MonoBehaviour
         }
 
         //
-        int questionNumber = 0;
+        questionNumber = 1;
 
         foreach(QuestionData question in randomQuestionList)
         {
@@ -81,6 +81,10 @@ public class QuizManager : MonoBehaviour
             quizText[2].GetComponentInChildren<TextMeshProUGUI>().text = question.optionTwo;
             quizText[3].GetComponentInChildren<TextMeshProUGUI>().text = question.optionThree;
             quizText[4].GetComponentInChildren<TextMeshProUGUI>().text = question.optionFour;
+            quizText[5].GetComponentInChildren<TextMeshProUGUI>().text = question.optionFive;
+
+            questionNumberText.text = "Question " + questionNumber + " of " + randomQuestionList.Count;
+            questionNumber++;
 
             int correctOption = System.Convert.ToInt32(question.correctOption);
             quizText[correctOption].GetComponent<Button>().onClick.AddListener(() => PressedCorrect());

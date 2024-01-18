@@ -16,6 +16,7 @@ public class QuestionData
     public string optionTwo;
     public string optionThree;
     public string optionFour;
+    public string optionFive;
     public string correctOption;
 
 }
@@ -28,6 +29,7 @@ public class QuizCreation : MonoBehaviour
     public TMP_InputField optionTwoInput;
     public TMP_InputField optionThreeInput;
     public TMP_InputField optionFourInput;
+    public TMP_InputField optionFiveInput;
     public TMP_InputField correctOptionInput;
     public Button createBtn;
 
@@ -41,6 +43,7 @@ public class QuizCreation : MonoBehaviour
             optionTwo = optionTwoInput.text,
             optionThree = optionThreeInput.text,
             optionFour = optionFourInput.text,
+            optionFive = optionFiveInput.text,
             correctOption = correctOptionInput.text,
         };
 
