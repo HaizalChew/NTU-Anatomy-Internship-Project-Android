@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
-using System.Xml.Linq;
+
 
 public class QuestionData
 {
@@ -52,7 +48,7 @@ public class QuizCreation : MonoBehaviour
         File.WriteAllText(filePath, jsonString);
         Debug.Log("Created");
         Debug.Log(jsonString);
-        AssetDatabase.Refresh();
+        ///AssetDatabase.Refresh();
     }
 
     // Update is called once per frame

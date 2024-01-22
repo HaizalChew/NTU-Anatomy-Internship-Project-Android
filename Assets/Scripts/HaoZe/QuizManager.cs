@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.IO;
+using UnityEngine.Networking;
 
 public class QuizManager : MonoBehaviour
 {
@@ -18,12 +19,19 @@ public class QuizManager : MonoBehaviour
 
     List<QuestionData> questionList = new List<QuestionData>();
 
+    QuestionData question = new QuestionData();
+
 
     public void Awake()
     {
         //quizPanelButton.GetComponent<Button>().onClick.AddListener(() => ToggleQuizPanel());
         //quizPanelButton.GetComponent<Button>().onClick.AddListener(() => StartQuiz());
-        StartQuiz();
+        int totalQuestion = 3;
+        for (int i = 1; i <= totalQuestion; i++)
+        {
+            StartCoroutine(ReadJsonQuestion(i));
+        }
+        //StartQuiz();
     }
 
     public void ToggleQuizPanel()
@@ -32,13 +40,33 @@ public class QuizManager : MonoBehaviour
         //quizPanel.SetActive(isPanelActive);
     }
 
-    public QuestionData ReadJsonQuestion(int questionNum)
+    IEnumerator ReadJsonQuestion(int questionNum)
     {
-        string filePath = "Assets/Json/question" + questionNum + ".json";
-        string stringFileContent = File.ReadAllText(filePath);
-        QuestionData data = new QuestionData();
-        data = JsonUtility.FromJson<QuestionData>(stringFileContent);
-        return data;
+        Debug.Log("StartReadCoroutine");
+        string path = Application.streamingAssetsPath;
+        path += "/Json/question" + questionNum + ".json";
+        using(var request = UnityWebRequest.Get(path))
+        {
+            yield return request.SendWebRequest();
+            
+            if(request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Error" + request.error);
+                yield break;
+            }
+
+            string jsonFile = request.downloadHandler.text;
+            question = JsonUtility.FromJson<QuestionData>(jsonFile);
+            questionList.Add(question);
+            Debug.Log(question.question);
+        }
+
+    }
+
+    IEnumerator WaitForQuestion()
+    {
+        yield return new WaitForSeconds(1);
+        Debug.Log("done");
     }
 
     public void StartQuiz()
@@ -47,10 +75,11 @@ public class QuizManager : MonoBehaviour
         int totalQuestion = 3;
         for(int i = 1; i <= totalQuestion; i++)
         {
-            QuestionData question = ReadJsonQuestion(i);
-            questionList.Add(question);
+            StartCoroutine(ReadJsonQuestion(i));
         }
 
+        StartCoroutine(WaitForQuestion());
+        Debug.Log(questionList.Count);
         //Randomise Questions
         List<QuestionData> randomQuestionList = new List<QuestionData>();
         for (int i = 1; i <= totalQuestion; i++)
@@ -87,6 +116,7 @@ public class QuizManager : MonoBehaviour
             questionNumber++;
 
             int correctOption = System.Convert.ToInt32(question.correctOption);
+            Debug.Log(correctOption);
             quizText[correctOption].GetComponent<Button>().onClick.AddListener(() => PressedCorrect());
             yield return new WaitUntil(nextQuestion);
         }
