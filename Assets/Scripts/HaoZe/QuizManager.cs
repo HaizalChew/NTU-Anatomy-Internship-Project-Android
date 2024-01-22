@@ -10,12 +10,16 @@ public class QuizManager : MonoBehaviour
 {
     public GameObject[] quizText;
     public TMP_Text questionNumberText;
+    public GameObject quizCompleteMenu;
 
     private int questionNumber;
+    private int correctOption;
     private bool isPressedCorrect = false;
+    private bool answersAreChecked;
 
     private delegate void correctAnswer();
     private correctAnswer pressed;
+
 
     List<QuestionData> questionList = new List<QuestionData>();
 
@@ -115,12 +119,13 @@ public class QuizManager : MonoBehaviour
             questionNumberText.text = "Question " + questionNumber + " of " + randomQuestionList.Count;
             questionNumber++;
 
-            int correctOption = System.Convert.ToInt32(question.correctOption);
+            correctOption = System.Convert.ToInt32(question.correctOption);
             Debug.Log(correctOption);
-            quizText[correctOption].GetComponent<Button>().onClick.AddListener(() => PressedCorrect());
+            //quizText[correctOption].GetComponent<Button>().OnClick.AddListener(() => PressedCorrect());
             yield return new WaitUntil(nextQuestion);
         }
         Debug.Log("QuizCompleted");
+        quizCompleteMenu.SetActive(true);
     }
 
     public bool nextQuestion()
@@ -145,5 +150,46 @@ public class QuizManager : MonoBehaviour
         isPressedCorrect = true;
     }
 
- 
+    public void CheckAnswers()
+    {
+        if (!answersAreChecked)
+        {
+            for (int i = 1; i < quizText.Length; i++)
+            {
+                if (quizText[i].GetComponent<Toggle>().isOn)
+                {
+                    if (i == correctOption)
+                    {
+                        quizText[i].GetComponent<Animator>().SetTrigger("Correct");
+                    }
+                    else
+                    {
+                        quizText[i].GetComponent<Animator>().SetTrigger("Wrong");
+                        quizText[correctOption].GetComponent<Animator>().SetTrigger("Correct");
+                    }
+                }
+
+                quizText[i].GetComponent<Toggle>().interactable = false;
+            }
+
+            answersAreChecked = true;
+        }
+        else
+        {
+            for (int i = 1; i < quizText.Length; i++)
+            {
+                quizText[i].GetComponent<Toggle>().interactable = true;
+                quizText[i].GetComponent<Toggle>().isOn = false;
+
+                if (quizText[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("QuizBtnCorrect") || quizText[i].GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("QuizBtnWrong"))
+                {
+                    quizText[i].GetComponent<Animator>().SetTrigger("Default");
+                }    
+            }
+
+            answersAreChecked = false;
+            isPressedCorrect = true;
+        }
+        
+    } 
 }
