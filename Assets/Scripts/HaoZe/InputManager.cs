@@ -134,12 +134,12 @@ public class InputManager : MonoBehaviour
                 case UnityEngine.InputSystem.TouchPhase.Ended:
                     camControls.enabled = true;
                     //Check if posiiton different from last time if yes save history
-                    checkPositionChanged();
+                    //checkPositionChanged();
                     if (touch.time > touch.startTime + 0.5 && isMoveSelected == true)
                     {
                         //Finish Move 
                         //Save Move Command
-                        SaveMoveCommand();
+                        //SaveMoveCommand();
 
                     }
                     else
