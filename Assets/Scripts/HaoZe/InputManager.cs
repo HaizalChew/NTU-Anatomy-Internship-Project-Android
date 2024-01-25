@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour
                         Vector2 screenPosition = touchControls.Touch.TouchPosition.ReadValue<Vector2>();
                         float worldZ = mainCamera.WorldToScreenPoint(transformHit.transform.position).z;
                         Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, worldZ));
-                        OnPerformHold(worldPos, transformHit);
+                        //OnPerformHold(worldPos, transformHit);
                         currentPos = worldPos;
                     }
                     break;
