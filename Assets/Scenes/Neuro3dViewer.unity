@@ -1030,6 +1030,11 @@ PrefabInstance:
       propertyPath: maxPanningDistance
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 8580735002401583721, guid: 55b9fee56bac941428ef1087a198f791,
+        type: 3}
+      propertyPath: cameraPanningSensitivity
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8580735003447776291, guid: 55b9fee56bac941428ef1087a198f791,
         type: 3}
       propertyPath: m_Name
@@ -4096,6 +4101,7 @@ MonoBehaviour:
   - {fileID: 884875827}
   - {fileID: 122466568}
   questionNumberText: {fileID: 0}
+  quizCompleteMenu: {fileID: 0}
 --- !u!4 &1836214343
 Transform:
   m_ObjectHideFlags: 0

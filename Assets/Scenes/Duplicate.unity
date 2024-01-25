@@ -1282,6 +1282,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
+      propertyPath: undoBtn
+      value: 
+      objectReference: {fileID: 824115087}
+    - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
+        type: 3}
       propertyPath: unHideBtn
       value: 
       objectReference: {fileID: 824115087}
@@ -1297,6 +1302,11 @@ PrefabInstance:
       objectReference: {fileID: 234138836}
     - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
+      propertyPath: undoMoveBtn
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
+        type: 3}
       propertyPath: inputManager
       value: 
       objectReference: {fileID: 505929326}
@@ -1305,6 +1315,11 @@ PrefabInstance:
       propertyPath: scriptManager
       value: 
       objectReference: {fileID: 1095070223}
+    - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
+        type: 3}
+      propertyPath: undoAllMoveBtn
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7064338430272642514, guid: b1779e7aefc10454486ae01554c274b0,
         type: 3}
       propertyPath: undoHistoryPanel
